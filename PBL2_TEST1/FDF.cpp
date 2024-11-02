@@ -1,6 +1,6 @@
 #include "event.h"
 #include "qltg.h"
-
+chinh sua 
 int main()
 {
     int choice;
