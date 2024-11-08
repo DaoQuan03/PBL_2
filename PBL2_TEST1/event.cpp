@@ -1,12 +1,14 @@
 #include "event.h"
-#include<iostream>
-#include<string>
+#include <iostream>
+#include <string>
 using namespace std;
 
+Event::Event(string tmtieude, string tmmota, thoigian tmstt, thoigian tmet) : tieude(tmtieude), mota(tmmota), startTime(tmstt), endTime(tmet)
+{
+}
 bool Event::operator==(const Event &ev)
 {
-    return (this->startTime == ev.startTime &&
-            this->endTime == ev.endTime);
+    return (this->startTime == ev.startTime);
 }
 
 const string Event::gettieude()
@@ -24,40 +26,27 @@ thoigian Event::getstt()
     return this->startTime;
 }
 
-const thoigian Event::getet()
+thoigian Event::getet()
 {
     return this->endTime;
 }
 
-void Event::settieude()
+void Event::settieude(const string tmtieude)
 {
-    string tmp;
-    cin.ignore();
-    getline(cin,tmp);
-    this->tieude = tmp;
+    this->tieude = tmtieude;
 }
 
-void Event::setmota()
+void Event::setmota(const string tmmota)
 {
-    string tmp;
-    cin.ignore();
-    getline(cin,tmp);
-    this->mota = tmp;
+    this->mota = tmmota;
 }
 
-void Event::setstt()
+void Event::setstt(const thoigian tmstt)
 {
-    thoigian tmp;
-    cin>>tmp;
-    this->startTime = tmp;    
+    this->startTime = tmstt;
 }
 
-void Event::setet()
+void Event::setet(const thoigian tmet)
 {
-    thoigian tmp;
-    cin>>tmp;
-    this->endTime = tmp;
+    this->endTime = tmet;
 }
-
-
-

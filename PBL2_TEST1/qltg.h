@@ -3,20 +3,19 @@
 
 #include <iostream>
 #include <vector>
-#include "time.h"
 #include "event.h"
+#include "BASEQLTT.h"
 using namespace std;
 
-class qltg
+class qltg:public base_qltt
 {
 private:
     vector<Event> events;
-
 public:
-    void print();
-    void add();
-    void erase();
-    void fix();
+    void print() override;
+    void add() override;
+    void erase() override;
+    void fix() override;
 };
 
-#endif  // QLTG_H
+#endif  

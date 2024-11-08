@@ -7,8 +7,8 @@ using namespace std;
 class base_qltt
 {
     public:
-    virtual void print();
-    virtual void add();
-    virtual void erase();
-    virtual void fix();
+    virtual void print() = 0;
+    virtual void add() = 0;
+    virtual void erase() = 0;
+    virtual void fix() = 0;
 };
