@@ -4,27 +4,22 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <ctime>
 #include <limits>
 #include <string>
 #include <iomanip>
 #include <sstream>
+#include <chrono>
+#include <thread>
 using namespace std;
 
 class thoigian
 {
-private:
+protected:
     int year, month, day, hour, minute, second;
     string tmtime;
     void isValid() const;
 public:
     thoigian(int=0, int=0, int=0, int=0, int=0, int=0);
-    void setyear();
-    void setmonth();
-    void setday();
-    void sethour();
-    void setminute();
-    void setsecond();
     void setinput();
     friend istream &operator>>(istream &, thoigian &);
     friend ostream &operator<<(ostream &, const thoigian &);
