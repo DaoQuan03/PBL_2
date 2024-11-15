@@ -1,13 +1,13 @@
 #ifndef QLTG_H
 #define QLTG_H
 
-#include <iostream>
-#include <vector>
+#include "time.h"
 #include "event.h"
 #include "BASEQLTT.h"
+
 using namespace std;
 
-class qltg:public base_qltt
+class qltg : public base_qltt
 {
 private:
     vector<Event> events;
@@ -16,6 +16,7 @@ public:
     void add() override;
     void erase() override;
     void fix() override;
+    void countdown() override;
 };
 
-#endif  
+#endif //QLTG_H

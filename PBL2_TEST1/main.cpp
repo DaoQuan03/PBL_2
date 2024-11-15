@@ -1,6 +1,4 @@
 #include "qltg.h"
-#include "countdown.h"
-#include "qlttstopwatch.h"
 
 int main()
 {
@@ -13,8 +11,7 @@ int main()
         cout << "2. Chinh sua su kien\n";
         cout << "3. Xoa su kien\n";
         cout << "4. Trinh bay tat ca su kien\n";
-        cout << "5. Dong ho dem nguoc\n";
-        cout << "6. Dong do thoi gian da troi qua\n";
+        cout << "5. Dem nguoc den su kien\n";
         cout << "0. Exit\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -37,30 +34,10 @@ int main()
         case 4:
             manager.print();
             break;
-
+        
         case 5:
-        {
-            int inputTime;
-            cout << "Nhap thoi gian can dem nguoc (giay): ";
-            cin >> inputTime;
-
-            if (inputTime <= 0)
-            {
-                cout << "Thoi gian phai lon hon 0 giay!" << endl;
-                break;
-            }
-
-            CountdownTimer timer(inputTime);
-            timer.start();
+            manager.countdown(); 
             break;
-        }
-        case 6:
-        {
-            qlttstopwatch qlttsw;
-            string tmenter;
-            qlttsw.add();
-            break;
-        }
 
         case 0:
             cout << "Exiting...\n";

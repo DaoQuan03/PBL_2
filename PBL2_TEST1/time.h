@@ -14,10 +14,9 @@ using namespace std;
 
 class thoigian
 {
-protected:
+public:
     int year, month, day, hour, minute, second;
     string tmtime;
-    void isValid() const;
 public:
     thoigian(int=0, int=0, int=0, int=0, int=0, int=0);
     void setinput();
@@ -26,6 +25,9 @@ public:
     bool operator!=(const thoigian &);
     bool operator==(const thoigian &);
     static bool isLeapYear(int);
+
+    static thoigian getCurrentTime();
+    thoigian timeUntil(const thoigian &other) const;
 };
 
 #endif // TIME_H
