@@ -138,3 +138,33 @@ thoigian thoigian::timeUntil(const thoigian &other) const {
 
     return countdown;
 }
+
+int thoigian::getyear()
+{
+    return this->year;
+}
+
+int thoigian::getmonth()
+{
+    return this->month;
+}
+
+int thoigian::getday()
+{
+    return this->day;
+}
+
+int thoigian::gethour()
+{
+    return this->hour;
+}
+
+int thoigian::getminute()
+{
+    return this->minute;
+}
+
+int thoigian::getsecond()
+{
+    return this->second;
+}
