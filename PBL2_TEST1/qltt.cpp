@@ -138,27 +138,35 @@ void qltt::add()
     int choice;
     string tmtieude, tmmota;
     thoigian tmstartime, tmendtime;
+
     cout << "Hay them mot su kien moi" << endl;
-    cout << "Nhap tieu de: ";
+    cout << "Nhap tieu de (nhap -1 de quay lai menu): ";
     getline(cin, tmtieude);
-    cout << "Nhap mo ta: ";
+    if (tmtieude == "-1") return;
+
+    cout << "Nhap mo ta (nhap -1 de quay lai menu): ";
     getline(cin, tmmota);
-    cout << "Nhap thoi gian bat dau (dd/mm/yyyy-hh:mm:ss): ";
-    tmstartime.setinput();
-    cout << "Ban co muon them thoi gian ket thuc khong\n";
-    cout << "1. Co            2. Khong\n";
+    if (tmmota == "-1") return;
+
+    cout << "Nhap thoi gian bat dau (dd/mm/yyyy-hh:mm:ss, nhap -1 de quay lai menu): ";
+    if (!tmstartime.setinput())
+        return;
+
+    cout << "Ban co muon them thoi gian ket thuc khong?\n";
+    cout << "1. Co            2. Khong (nhap -1 de quay lai menu)\n";
     cin >> choice;
-    switch (choice)
+    if (choice == -1) return;
+
+    if (choice == 1)
     {
-    case 1:
-        tmendtime.setinput();
-        break;
-    case 2:
-        break;
+        if (!tmendtime.setinput())
+            return;
     }
+
     Event tmp(tmtieude, tmmota, tmstartime, tmendtime);
     events.push_back(tmp);
 }
+
 
 void qltt::erase()
 {
@@ -168,10 +176,7 @@ void qltt::erase()
         return;
     }
 
-    string tieude;
-    thoigian startTime;
-
-    cout << "Chon su kien de xoa:\n";
+    cout << "Chon su kien de xoa (nhap -1 de quay lai menu):\n";
     for (int i = 0; i < events.size(); ++i)
     {
         cout << i + 1 << ". " << endl;
@@ -179,10 +184,12 @@ void qltt::erase()
         cout << "- Mo ta: " << events[i].getmota() << endl;
         cout << "- Bat dau: " << events[i].getstt() << endl;
     }
+
     int choice;
     cout << "Nhap so thu tu cua su kien: ";
     cin >> choice;
     cin.ignore();
+    if (choice == -1) return;
 
     if (choice < 1 || choice > events.size())
     {
@@ -193,6 +200,7 @@ void qltt::erase()
     events.erase(events.begin() + (choice - 1));
     cout << "Da xoa su kien.\n";
 }
+
 
 void qltt::fix()
 {
@@ -212,9 +220,10 @@ void qltt::fix()
     }
 
     int choice;
-    cout << "Nhap so thu tu cua su kien can chinh sua: ";
+    cout << "Nhap so thu tu cua su kien can chinh sua (nhap -1 de quay lai menu): ";
     cin >> choice;
     cin.ignore();
+    if (choice == -1) return;
 
     if (choice < 1 || choice > events.size())
     {
@@ -226,26 +235,30 @@ void qltt::fix()
     string tieude, mota;
     thoigian startTime;
 
-    cout << "Nhap tieu de moi (tieu de hien tai: " << selectedEvent.gettieude() << "): ";
+    cout << "Nhap tieu de moi (tieu de hien tai: " << selectedEvent.gettieude() << ", nhap -1 de quay lai): ";
     getline(cin, tieude);
+    if (tieude == "-1") return;
     if (!tieude.empty())
     {
         selectedEvent.settieude(tieude);
     }
 
-    cout << "Nhap mo ta moi (mo ta hien tai: " << selectedEvent.getmota() << "): ";
+    cout << "Nhap mo ta moi (mo ta hien tai: " << selectedEvent.getmota() << ", nhap -1 de quay lai): ";
     getline(cin, mota);
+    if (mota == "-1") return;
     if (!mota.empty())
     {
         selectedEvent.setmota(mota);
     }
 
-    cout << "Nhap thoi gian bat dau moi (thoi gian hien tai: " << selectedEvent.getstt() << "): ";
-    startTime.setinput();
-    selectedEvent.setstt(startTime);
+    cout << "Nhap thoi gian bat dau moi (thoi gian hien tai: " << selectedEvent.getstt() << ", nhap -1 de quay lai): ";
+    if (!startTime.setinput())
+        return;
 
+    selectedEvent.setstt(startTime);
     cout << "Da cap nhat thong tin su kien thanh cong.\n";
 }
+
 
 void qltt::countdown()
 {

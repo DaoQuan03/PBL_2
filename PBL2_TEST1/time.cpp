@@ -38,9 +38,10 @@ bool thoigian::isLeapYear(int year)
     return (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 };
 
-void thoigian::setinput()
+bool thoigian::setinput()
 {
     getline(cin, tmtime);
+    
     int cnt = 0;
     for (char x : tmtime)
     {
@@ -49,11 +50,13 @@ void thoigian::setinput()
             cnt++;
         }
     }
-    if (cnt > 5)
+
+    if (cnt != 5)
     {
         cout << "Ban da nhap sai dinh dang, vui long nhap lai(dd/mm/yyyy-hh:mm:ss): ";
-        getline(cin, tmtime);
+        return false;  // Trả về false nếu định dạng sai
     }
+
     string tmsave;
     stringstream ss(tmtime);
 
@@ -75,34 +78,43 @@ void thoigian::setinput()
     {
         cout << "Ngay khong hop le cho thang " << month << ", vui long nhap lai ngay: ";
         cin >> this->day;
+        cin.ignore();  
     }
     if (this->month < 1 || this->month > 12)
     {
         cout << "Ban da nhap sai quy dinh cua thang(1-12), vui long nhap lai thang: ";
         cin >> this->month;
+        cin.ignore();  
     }
     if (this->year < 2024)
     {
         cout << "Ban da nhap sai quy dinh cua nam(>2024), vui long nhap lai nam: ";
         cin >> this->year;
+        cin.ignore();  
     }
     if (this->hour < 0 || this->hour > 23)
     {
         cout << "Ban da nhap sai quy dinh cua gio(0-23), vui long nhap lai gio: ";
         cin >> this->hour;
+        cin.ignore();  
     }
     if (this->minute < 0 || this->minute > 60)
     {
         cout << "Ban da nhap sai quy dinh cua phut(0-60), vui long nhap lai phut: ";
         cin >> this->minute;
+        cin.ignore();  
     }
     if (this->second < 0 || this->second > 60)
     {
         cout << "Ban da nhap sai quy dinh cua giay(0-60), vui long nhap lai giay: ";
         cin >> this->second;
+        cin.ignore();  
     }
+
     cout << endl;
+    return true;  
 }
+
 
 thoigian thoigian::getCurrentTime() {
     auto now = std::chrono::system_clock::now();
