@@ -13,9 +13,9 @@ class qltt : public base_qltt
 private:
     vector<Event> events;
     qluser access;
-    user us;
 public:
     string setout;
+    int rightmanager;
     void print() override;
     void add() override;
     void erase() override;
@@ -23,8 +23,8 @@ public:
     void countdown();
     void credata();
     void writedata();
-    void creaacc();
-    void checkacc();
+    void creacc();
+    void checkdata();
 };
 
 #endif // QLTT_H

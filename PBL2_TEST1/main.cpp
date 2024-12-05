@@ -1,6 +1,6 @@
 #include "qltt.h"
-
-void displayMenu(qltt &manager)
+#include "manager.h"
+void displayMenu(qltt &use)
 {
     int choice;
     do
@@ -19,27 +19,27 @@ void displayMenu(qltt &manager)
         switch (choice)
         {
         case 1:
-            manager.add();
+            use.add();
             break;
 
         case 2:
-            manager.fix();
+            use.fix();
             break;
 
         case 3:
-            manager.erase();
+            use.erase();
             break;
 
         case 4:
-            manager.print();
+            use.print();
             break;
 
         case 5:
-            manager.countdown();
+            use.countdown();
             break;
 
         case 6:
-            manager.writedata();
+            use.writedata();
             break;
 
         case 0:
@@ -52,28 +52,88 @@ void displayMenu(qltt &manager)
     } while (true);
 }
 
+void displayformanager(manager &master)
+{
+    int choice;
+    do
+    {
+        cout << "-------------FOR MASTER-------------\n";
+        cout << "1. In ra danh sach pham nhan\n";
+        cout << "2. Them mot pham nhan\n";
+        cout << "3. Xoa mot pham nhan\n";
+        cout << "4. Chinh sua du lieu cua pham nhan\n";
+        cout << "0. Exit\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+        switch (choice)
+        {
+        case 1:
+            master.print();
+            break;
+
+        case 2:
+            master.add();
+            break;
+
+        case 3:
+            master.erase();
+            break;
+
+        case 4:
+            master.fix();
+            break;
+
+        case 0:
+            cout << "Exiting...\n";
+            return;
+
+        default:
+            cout << "Invalid choice!\n";
+        }
+    } while (true);
+}
 int main()
 {
-    qltt manager;
+    qltt use;
+    manager master;
     int choice;
-
     do
     {
         cout << "CAM ON BAN DA SU DUNG DICH VU CUA CHUNG TOI\n";
         cout << "Ban da co tai khoan chua?\n";
-        cout << "1. CHUA           2. ROI\n";
+        cout << "1. CHUA           2. ROI           3.Thoat chuong trinh\n";
         cin >> choice;
 
         switch (choice)
         {
         case 1:
-            manager.creaacc();
-            displayMenu(manager);
+            use.creacc();
+            if (use.rightmanager)
+            {
+                displayformanager(master);
+                return 0;
+            }
+            else
+            {
+                displayMenu(use);
+            }
             break;
         case 2:
-            manager.checkacc();
-            displayMenu(manager);
+            use.checkdata();
+            if (use.rightmanager)
+            {
+                displayformanager(master);
+                return 0;
+            }
+            else
+            {
+                displayMenu(use);
+            }
             break;
+        case 3:
+            cout << "GOOD LUCK\n";
+            return 0;
         default:
             cout << "Lua chon khong hop le.\n";
         }

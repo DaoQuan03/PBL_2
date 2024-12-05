@@ -1,17 +1,30 @@
 #include "qltc.h"
 qluser::qluser()
 {
-
 }
 
 qluser::~qluser()
 {
 }
 
-void qluser::check(user tmuse)
+void qluser::inputuser()
 {
     
-    string input = tmuse.getname() + " " + tmuse.getpass() + ".txt";
+    string name, password;
+    cin.ignore();
+    cout << "Nhap ten nguoi dung: ";
+    getline(cin, name);
+    cout << "Nhap mat khau: ";
+    getline(cin, password);
+    use.setname(name);
+    use.setpassword(password);
+
+}
+
+void qluser::check()
+{
+    filename = use.getname() + "-" + use.getpass() + ".txt";
+    cout << filename << endl;
     string folderPath = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
     bool found = false;
     try
@@ -20,7 +33,7 @@ void qluser::check(user tmuse)
         {
             if (entry.is_regular_file())
             {
-                if (entry.path().filename() == input)
+                if (entry.path().filename() == filename)
                 {
                     found = true;
                     recheck = 1;
@@ -36,7 +49,8 @@ void qluser::check(user tmuse)
     }
     if (found)
     {
-        ifstream inputfile(input);
+        fs::path file = fs::path(folderPath) / filename;
+        ifstream inputfile(file);
         if (!inputfile)
         {
             cout << "LOI!KHONG THE TRUY CAP DUOC DU LIEU\n";
@@ -53,18 +67,20 @@ void qluser::check(user tmuse)
     }
 }
 
-void qluser::create(user tmuse)
+void qluser::create()
 {
-    string filename = tmuse.getname() + " " + tmuse.getpass() + ".txt";
-    string folder ="C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
-    if (!fs::exists(folder)) {
-        std::cout << "LOI" << std::endl;
+    filename = use.getname() + "-" + use.getpass() + ".txt";
+    string folder = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    if (!fs::exists(folder))
+    {
+        cout << "LOI" << std::endl;
         recheck = 0;
         return;
     }
 
-    if (!fs::is_directory(folder)) {
-        std::cout << "OPP LOI" << std::endl;
+    if (!fs::is_directory(folder))
+    {
+        cout << "OPP LOI" << std::endl;
         recheck = 0;
         return;
     }
@@ -83,4 +99,16 @@ void qluser::create(user tmuse)
     }
 }
 
-
+void qluser::checkmanager()
+{
+    string manager1 = "Ba Vu Han My";
+    string manager2 = "Dao Quan 102230042";
+    string tmpsave = use.getname() + " " + use.getpass();
+    if (tmpsave == manager1 || tmpsave == manager2)
+    {
+        cout << "Chao mung chu nhan quay tro lai\n";
+        managercheck = 1;
+    }
+    else
+        managercheck = 0;
+}

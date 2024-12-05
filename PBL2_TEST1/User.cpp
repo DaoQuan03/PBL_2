@@ -1,7 +1,6 @@
 #include "User.h"
 
-
-user::user(string name , string pass ) : username(name), password(pass)
+user::user(string name, string pass) : username(name), password(pass)
 {
 }
 
@@ -9,15 +8,14 @@ user::~user()
 {
 }
 
-void user::setname()
+void user::setname(string tmp)
 {
-    cin.ignore();
-    getline(cin, this->username);
+    this->username = tmp;
 }
 
-void user::setpassword()
+void user::setpassword(string tmp)
 {
-    getline(cin, this->password);
+    this->password = tmp;
 }
 
 string user::getname()
