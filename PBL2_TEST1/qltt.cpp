@@ -73,8 +73,6 @@ void qltt::credata()
                 tmtieude = tmsave;
                 getline(ss, tmsave, '|');
                 tmmota = tmsave;
-                getline(ss, tmsave, ':');
-                era = tmsave;
                 getline(ss, tmsave, '/');
                 tmstt.day = stoi(tmsave);
                 getline(ss, tmsave, '/');
@@ -111,7 +109,7 @@ void qltt::writedata()
         tmhour = to_string(tmstt.gethour());
         tmminute = to_string(tmstt.getminute());
         tmsecond = to_string(tmstt.getsecond());
-        tmsave = tmtieude + "   |   " + tmmota + "    |   " +  tmday +"         "+ "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+        tmsave = tmtieude + "|" + tmmota + "|" +  tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
         savevector.push_back(tmsave);
     }
     string input = access.filename;
