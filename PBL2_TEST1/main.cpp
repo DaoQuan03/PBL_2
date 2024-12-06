@@ -128,6 +128,7 @@ int main()
             }
             else
             {
+                use.credata();
                 displayMenu(use);
             }
             break;

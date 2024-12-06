@@ -14,6 +14,10 @@ void qltt::creacc()
     else
     {
         access.create();
+        if(access.recheck != 1)
+        return creacc();
+        else
+        return;
     }
 }
 
@@ -30,8 +34,11 @@ void qltt::checkdata()
     else
     {
         access.check();
+        if(access.recheck != 1)
+        return checkdata();
+        else
+        return;
     }
-    cout << rightmanager << endl;
 }
 void qltt::credata()
 {
@@ -95,8 +102,8 @@ void qltt::writedata()
     thoigian tmstt;
     for (int i = 0; i < events.size(); i++)
     {
-        tmtieude = "Tieu de:" + events[i].gettieude();
-        tmmota = "Mo ta: " + events[i].getmota();
+        tmtieude =  events[i].gettieude();
+        tmmota =  events[i].getmota();
         tmstt = events[i].getstt();
         tmyear = to_string(tmstt.getyear());
         tmmonth = to_string(tmstt.getmonth());
@@ -104,7 +111,7 @@ void qltt::writedata()
         tmhour = to_string(tmstt.gethour());
         tmminute = to_string(tmstt.getminute());
         tmsecond = to_string(tmstt.getsecond());
-        tmsave = tmtieude + "|" + tmmota + "|" + "THOI GIAN BAT DAU:" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+        tmsave = tmtieude + "   |   " + tmmota + "    |   " +  tmday +"         "+ "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
         savevector.push_back(tmsave);
     }
     string input = access.filename;
@@ -134,9 +141,9 @@ void qltt::print()
 
     for (auto &ev : events)
     {
-        cout << ev.gettieude() << endl;
-        cout << ev.getmota() << endl;
-        cout << ev.getstt() << endl;
+        cout << "Tieu de:"<<ev.gettieude() << endl;
+        cout <<"Mo ta: "<< ev.getmota() << endl;
+        cout <<"Thoi gian bat dau: "<< ev.getstt() << endl;
         if (ev.getet() != 0)
         {
             cout << "Thoi gian ket thuc: " << ev.getet() << endl;
