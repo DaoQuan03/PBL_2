@@ -40,38 +40,26 @@ bool thoigian::isLeapYear(int year)
 
 bool thoigian::setinput()
 {
-    getline(cin, tmtime);
-    
-    int cnt = 0;
-    for (char x : tmtime)
-    {
-        if (x == '/' || x == '-' || x == ':')
-        {
-            cnt++;
-        }
-    }
+    int tmday,tmmonth,tmyear,tmhour,tmminute,tmsecond;
+    cout<<"Nhap ngay: ";
+    cin>>tmday;
+    cout<<"Nhap thang: ";
+    cin>>tmmonth;
+    cout<<"Nhap nam: ";
+    cin>>tmyear;
+    cout<<"Nhap gio: ";
+    cin>>tmhour;
+    cout<<"Nhap phut: ";
+    cin>>tmminute;
+    cout<<"Nhap giay: ";
+    cin>>tmsecond;
 
-    if (cnt != 5)
-    {
-        cout << "Ban da nhap sai dinh dang, vui long nhap lai(dd/mm/yyyy-hh:mm:ss): ";
-        return false;  // Trả về false nếu định dạng sai
-    }
-
-    string tmsave;
-    stringstream ss(tmtime);
-
-    getline(ss, tmsave, '/');
-    this->day = stoi(tmsave);
-    getline(ss, tmsave, '/');
-    this->month = stoi(tmsave);
-    getline(ss, tmsave, '-');
-    this->year = stoi(tmsave);
-    getline(ss, tmsave, ':');
-    this->hour = stoi(tmsave);
-    getline(ss, tmsave, ':');
-    this->minute = stoi(tmsave);
-    getline(ss, tmsave);
-    this->second = stoi(tmsave);
+    setday(tmday);
+    setmonth(tmmonth);
+    setyear(tmyear);
+    sethour(tmhour);
+    setminute(tmminute);
+    setsecond(tmsecond);
 
     int daysInMonth[] = {0, 31, 28 + isLeapYear(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (this->day < 1 || this->day > daysInMonth[month])
@@ -149,6 +137,36 @@ thoigian thoigian::timeUntil(const thoigian &other) const {
     countdown.second = secondsRemaining % 60;
 
     return countdown;
+}
+
+void thoigian::setday(int day)
+{
+    this->day=day;
+}
+
+void thoigian::setmonth(int month)
+{
+    this->month=month;
+}
+
+void thoigian::setyear(int year)
+{
+    this->year=year;
+}
+
+void thoigian::sethour(int hour)
+{
+    this->hour=hour;
+}
+
+void thoigian::setminute(int minute)
+{
+    this->minute=minute;
+}
+
+void thoigian::setsecond(int second)
+{
+    this->second=second;
 }
 
 int thoigian::getyear()

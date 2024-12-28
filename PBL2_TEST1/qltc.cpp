@@ -9,7 +9,6 @@ qluser::~qluser()
 
 void qluser::inputuser()
 {
-    
     string name, password;
     cin.ignore();
     cout << "Nhap ten nguoi dung: ";

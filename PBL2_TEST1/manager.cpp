@@ -44,35 +44,114 @@ void manager::print()
 
 void manager::add()
 {
-    user tmp;
+    user ustmp;
     string tmpname, tmppass;
     cin.ignore();
     cout << "Nhap ten chu nhan muon: ";
     getline(cin, tmpname);
     cout << "Nhap mat khau chu nhan muon: ";
     getline(cin, tmppass);
-    tmp.setname(tmpname);
-    tmp.setpassword(tmppass);
-    save.push_back(tmp);
-    string folder = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
-    string filename = tmpname + "-" + tmppass + ".txt";
-    if (!fs::exists(folder))
+    ustmp.setname(tmpname);
+    ustmp.setpassword(tmppass);
+    save.push_back(ustmp);
+    string base = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    string accname = ustmp.getname() + "-" + ustmp.getpass() + ".txt";
+    if (!fs::exists(base))
     {
         cout << "DATABASE da bi loi" << endl;
-        fs::create_directory(folder);
+        fs::create_directory(base);
     }
-    else if (!fs::is_directory(folder))
+    else if (!fs::is_directory(base))
     {
         cout << "Loi khi them 1 pham nhan" << endl;
         return;
     }
 
-    fs::path namepath = fs::path(folder) / filename;
-    ofstream newacc(namepath);
+    fs::path accpath = fs::path(base) / accname;
+    ofstream newacc(accpath);
     if (newacc.is_open())
     {
         cout << "Chu nhan da them tai khoan thanh cong" << endl;
         newacc.close();
+        int choice;
+        vector<Event> events;
+        string tmtieude, tmmota;
+        thoigian tmstartime, tmendtime;
+
+        cout << "Hay them mot su kien moi" << endl;
+        cout << "Nhap tieu de (nhap -1 de quay lai menu): ";
+        getline(cin, tmtieude);
+        if (tmtieude == "-1")
+            return;
+
+        cout << "Nhap mo ta (nhap -1 de quay lai menu): ";
+        getline(cin, tmmota);
+        if (tmmota == "-1")
+            return;
+
+        cout << "Nhap thoi gian bat dau (dd/mm/yyyy-hh:mm:ss, nhap -1 de quay lai menu): ";
+        if (!tmstartime.setinput())
+            return;
+
+        cout << "Ban co muon them thoi gian ket thuc khong?\n";
+        cout << "1. Co            2. Khong (nhap -1 de quay lai menu)\n";
+        cin >> choice;
+        if (choice == -1)
+            return;
+
+        if (choice == 1)
+        {
+            if (!tmendtime.setinput())
+                return;
+        }
+        Event tmp(tmtieude, tmmota, tmstartime, tmendtime);
+        events.push_back(tmp);
+
+        vector<string> savevector;
+        string tmptieude, tmpmota, tmyear, tmmonth, tmday, tmhour, tmminute, tmsecond, tmsave;
+        thoigian tmstt, tmet;
+        for (int i = 0; i < events.size(); i++)
+        {
+            tmet = events[i].getet();
+            tmptieude = events[i].gettieude();
+            tmpmota = events[i].getmota();
+            tmstt = events[i].getstt();
+            tmyear = to_string(tmstt.getyear());
+            tmmonth = to_string(tmstt.getmonth());
+            tmday = to_string(tmstt.getday());
+            tmhour = to_string(tmstt.gethour());
+            tmminute = to_string(tmstt.getminute());
+            tmsecond = to_string(tmstt.getsecond());
+            tmsave = tmtieude + "|" + tmmota + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+            if (tmet.getday() > 0)
+            {
+                tmyear = to_string(tmet.getyear());
+                tmmonth = to_string(tmet.getmonth());
+                tmday = to_string(tmet.getday());
+                tmhour = to_string(tmet.gethour());
+                tmminute = to_string(tmet.getminute());
+                tmsecond = to_string(tmet.getsecond());
+                tmsave = tmsave + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+            }
+            savevector.push_back(tmsave);
+        }
+        string inputmp = ustmp.getname() + "-" + ustmp.getpass() + "txt";
+        string input = inputmp;
+        string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+        fs::path filepath = fs::path(foldername) / input;
+        ofstream file(filepath);
+        if (file.is_open())
+        {
+            for (int i = 0; i < savevector.size(); i++)
+            {
+                file << savevector[i] << endl;
+            }
+            file.close();
+        }
+        else
+        {
+            cout << "Khong the truy cap du lieu\n";
+        }
         return;
     }
     else
@@ -84,6 +163,7 @@ void manager::add()
 
 void manager::fix()
 {
+    print();
     cout << "Nhap so thu tu nguoi dung chu nhan muon thay doi\n";
     int choose;
     cin >> choose;
@@ -99,7 +179,7 @@ void manager::fix()
                 cout << "Chu nhan muon toi thuc hien dieu gi~~\n";
                 cout << "1. Thay doi ten va mat khau nguoi dung\n";
                 cout << "2. Thay doi du lieu nguoi dung\n";
-                cout << "0. Thoat\n"; 
+                cout << "0. Thoat\n";
                 cin >> choosen;
                 cin.ignore();
 
@@ -141,12 +221,13 @@ void manager::fix()
                 case 2:
                 {
                     vector<Event> events;
-                    thoigian tmstt;
-                    string input = save[i].getname() + "-" + save[i].getpass() + ".txt";
+                    thoigian tmstt, tmet;
+                    string tpname = save[i].getname(), tppass = save[i].getpass();
+                    string input = tpname + "-" + tppass + ".txt";
+                    cout << input << endl;
                     string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
                     fs::path filepath = fs::path(foldername) / input;
                     ifstream file(filepath);
-                    string setout;
                     if (!file)
                     {
                         cout << "Khong the truy cap duoc du lieu\n";
@@ -162,7 +243,7 @@ void manager::fix()
                     else
                     {
                         file.unget();
-                        string line, era, tmtieude, tmmota;
+                        string line, tmtieude, tmmota;
                         string tmsave;
                         while (getline(file, line))
                         {
@@ -171,8 +252,6 @@ void manager::fix()
                             tmtieude = tmsave;
                             getline(ss, tmsave, '|');
                             tmmota = tmsave;
-                            getline(ss, tmsave, ':');
-                            era = tmsave;
                             getline(ss, tmsave, '/');
                             tmstt.day = stoi(tmsave);
                             getline(ss, tmsave, '/');
@@ -183,9 +262,33 @@ void manager::fix()
                             tmstt.hour = stoi(tmsave);
                             getline(ss, tmsave, ':');
                             tmstt.minute = stoi(tmsave);
-                            getline(ss, tmsave);
+                            getline(ss, tmsave, '|');
                             tmstt.second = stoi(tmsave);
-                            Event tmp(tmtieude, tmmota, tmstt, 0);
+                            // Kiểm tra nếu không còn ký tự sau khi gán tmstt.second
+                            if (ss.rdbuf()->in_avail() != 0) // kiểm tra còn dữ liệu trong bộ nhớ đệm của stringstream hay không
+                                                             // rdbuf()(read buffer): la mot phuong thuc cua doi tuong stream, dung de tra ve 1 con tro lien ket voi bo nho dem cua 1 doi tuong stream
+                                                             // in_avail(): dung de tra ve so byte con lai trong bo nho dem truoc khi duoc truyen vao doi tuong stream, neu bang khong thi khong co du lieu trong nguon
+                            {
+                                getline(ss, tmsave, '/');
+                                tmet.day = stoi(tmsave);
+                                cout << tmet.day << endl;
+
+                                if (tmet.day > 0)
+                                {
+                                    getline(ss, tmsave, '/');
+                                    tmet.month = stoi(tmsave);
+                                    getline(ss, tmsave, '-');
+                                    tmet.year = stoi(tmsave);
+                                    getline(ss, tmsave, ':');
+                                    tmet.hour = stoi(tmsave);
+                                    getline(ss, tmsave, ':');
+                                    tmet.minute = stoi(tmsave);
+                                    getline(ss, tmsave);
+                                    tmet.second = stoi(tmsave);
+                                }
+                            }
+
+                            Event tmp(tmtieude, tmmota, tmstt, tmet);
                             events.push_back(tmp);
                         }
                         file.close();
@@ -203,14 +306,26 @@ void manager::fix()
                         cout << "- Tieu de: " << events[i].gettieude() << endl;
                         cout << "- Mo ta: " << events[i].getmota() << endl;
                         cout << "- Bat dau: " << events[i].getstt() << endl;
+                        cout << "- Ket thuc: " << events[i].getet() << endl;
                     }
-                    cout << "Nhap thu tu su kien chu nhan muon sua\n";
-                    int choice = 0;
+
+                    int choice;
+                    cout << "Nhap so thu tu cua su kien can chinh sua (nhap -1 de quay lai menu): ";
                     cin >> choice;
+                    cin.ignore();
+                    if (choice == -1)
+                        return;
+
+                    if (choice < 1 || choice > events.size())
+                    {
+                        cout << "Lua chon khong hop le.\n";
+                        return;
+                    }
+
                     Event &selectedEvent = events[choice - 1];
                     string tieude, mota;
-                    thoigian startTime;
-                    cin.ignore();
+                    thoigian startTime, endTime;
+
                     cout << "Nhap tieu de moi (tieu de hien tai: " << selectedEvent.gettieude() << ", nhap -1 de quay lai): ";
                     getline(cin, tieude);
                     if (tieude == "-1")
@@ -219,6 +334,7 @@ void manager::fix()
                     {
                         selectedEvent.settieude(tieude);
                     }
+
                     cout << "Nhap mo ta moi (mo ta hien tai: " << selectedEvent.getmota() << ", nhap -1 de quay lai): ";
                     getline(cin, mota);
                     if (mota == "-1")
@@ -227,11 +343,24 @@ void manager::fix()
                     {
                         selectedEvent.setmota(mota);
                     }
+
                     cout << "Nhap thoi gian bat dau moi (thoi gian hien tai: " << selectedEvent.getstt() << ", nhap -1 de quay lai): ";
                     if (!startTime.setinput())
                         return;
+                    int choose;
+                    cout << "Ban co muon them thoi gian ket thuc khong?\n";
+                    cout << "1. Co            2. Khong (nhap -1 de quay lai menu)\n";
+                    cin >> choose;
+                    if (choose == -1)
+                        return;
 
+                    if (choose == 1)
+                    {
+                        if (!endTime.setinput())
+                            return;
+                    }
                     selectedEvent.setstt(startTime);
+                    selectedEvent.setet(endTime);
                     cout << "Da cap nhat thong tin su kien thanh cong.\n";
                     cout << startTime;
                     vector<string> savevector;
@@ -239,16 +368,27 @@ void manager::fix()
                     thoigian tmpstt = selectedEvent.getstt();
                     for (int i = 0; i < events.size(); i++)
                     {
-                        tmtieude = "Tieu de:" + events[i].gettieude();
-                        tmmota = "Mo ta: " + events[i].getmota();
+                        tmet = events[i].getet();
+                        tmtieude = events[i].gettieude();
+                        tmmota = events[i].getmota();
                         tmstt = events[i].getstt();
-                        tmyear = to_string(tmpstt.getyear());
-                        tmmonth = to_string(tmpstt.getmonth());
-                        tmday = to_string(tmpstt.getday());
-                        tmhour = to_string(tmpstt.gethour());
-                        tmminute = to_string(tmpstt.getminute());
-                        tmsecond = to_string(tmpstt.getsecond());
-                        tmsave = tmtieude + "|" + tmmota + "|" + "THOI GIAN BAT DAU:" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+                        tmyear = to_string(tmstt.getyear());
+                        tmmonth = to_string(tmstt.getmonth());
+                        tmday = to_string(tmstt.getday());
+                        tmhour = to_string(tmstt.gethour());
+                        tmminute = to_string(tmstt.getminute());
+                        tmsecond = to_string(tmstt.getsecond());
+                        tmsave = tmtieude + "|" + tmmota + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+                        if (tmet.getday() > 0)
+                        {
+                            tmyear = to_string(tmet.getyear());
+                            tmmonth = to_string(tmet.getmonth());
+                            tmday = to_string(tmet.getday());
+                            tmhour = to_string(tmet.gethour());
+                            tmminute = to_string(tmet.getminute());
+                            tmsecond = to_string(tmet.getsecond());
+                            tmsave = tmsave + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+                        }
                         savevector.push_back(tmsave);
                     }
                     string inacc = save[i].getname() + "-" + save[i].getpass() + ".txt";
@@ -285,6 +425,8 @@ void manager::fix()
 
 void manager::erase()
 {
+    cout << "Danh sach nguoi dung: " << endl;
+    print();
     cout << "Nhap so thu tu tai khoan chu nhan muon xoa\n";
     int choice;
     cin >> choice;
@@ -295,7 +437,6 @@ void manager::erase()
     }
     else
     {
-        print();
         for (int i = 0; i < save.size() - 1; i++)
         {
             if (i == choice - 1)

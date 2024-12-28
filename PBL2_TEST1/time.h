@@ -30,6 +30,13 @@ public:
     static thoigian getCurrentTime();
     thoigian timeUntil(const thoigian &other) const;
     
+    void setday(int);
+    void setmonth(int);
+    void setyear(int);
+    void sethour(int);
+    void setminute(int);
+    void setsecond(int);
+
     int getyear();
     int getmonth();
     int getday();

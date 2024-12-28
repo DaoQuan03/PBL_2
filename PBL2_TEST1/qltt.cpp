@@ -14,10 +14,10 @@ void qltt::creacc()
     else
     {
         access.create();
-        if(access.recheck != 1)
-        return creacc();
+        if (access.recheck != 1)
+            return creacc();
         else
-        return;
+            return;
     }
 }
 
@@ -34,37 +34,52 @@ void qltt::checkdata()
     else
     {
         access.check();
-        if(access.recheck != 1)
-        return checkdata();
+        if (access.recheck != 1)
+            return checkdata();
         else
-        return;
+            return;
     }
 }
+
+bool qltt::isValidNumber(const string &s) //Kiem tra xem chuoi dau vao co phai la 1 so hoac rong hay khong
+{
+    return !s.empty() && all_of(s.begin(), s.end(), ::isdigit); //neu chuoi rong, tra ve false
+                                                                //all_of(begin,end,condition): kiem tra tat ca cac phan tu trong day co thoa man dieu kien nao do hay khong
+}                                                               //::isdigit: kiem tra 1 ky tu co phai la 1 so tu 0-9 hay khong
+
+int qltt::safeStoi(const string &s)
+{
+    if (isValidNumber(s))
+    {
+        return stoi(s);
+    }
+    throw invalid_argument("Invalid number: " + s); //la mot ngoai le(exception), dung de thong bao 1 doi so khong hop le da duoc truyen vao
+}
+
 void qltt::credata()
 {
     if (access.recheck == 1)
     {
-        thoigian tmstt;
+        thoigian tmstt, tmet;
         string input = access.filename;
         string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
         fs::path filepath = fs::path(foldername) / input;
         ifstream file(filepath);
-        string setout;
         if (!file)
         {
             cout << "Khong the truy cap duoc du lieu\n";
             return;
         }
         char check;
-        file.get(check);
-        if (file.eof())
+        file.get(check);    //Lay ki tu dau tien de kiem tra xem da co du lieuu ve su kien cua nguoi dung trong data chua
+        if (file.eof())     //Kiem tra con tro da di den cuoi cung chua
         {
             cout << "Ban chua tao thong tin cua su kien\n";
         }
         else
         {
-            file.unget();
-            string line, era, tmtieude, tmmota;
+            file.unget();    //Neu co du lieu, tra lai ki tu dau tien vua lay o tren
+            string line, tmtieude, tmmota;
             string tmsave;
             while (getline(file, line))
             {
@@ -74,18 +89,41 @@ void qltt::credata()
                 getline(ss, tmsave, '|');
                 tmmota = tmsave;
                 getline(ss, tmsave, '/');
-                tmstt.day = stoi(tmsave);
+                tmstt.day = safeStoi(tmsave);
                 getline(ss, tmsave, '/');
-                tmstt.month = stoi(tmsave);
+                tmstt.month = safeStoi(tmsave);
                 getline(ss, tmsave, '-');
-                tmstt.year = stoi(tmsave);
+                tmstt.year = safeStoi(tmsave);
                 getline(ss, tmsave, ':');
-                tmstt.hour = stoi(tmsave);
+                tmstt.hour = safeStoi(tmsave);
                 getline(ss, tmsave, ':');
-                tmstt.minute = stoi(tmsave);
-                getline(ss, tmsave);
-                tmstt.second = stoi(tmsave);
-                Event tmp(tmtieude, tmmota, tmstt, 0);
+                tmstt.minute = safeStoi(tmsave);
+                getline(ss, tmsave,'|');
+                tmstt.second = safeStoi(tmsave);
+
+                // Kiểm tra nếu không còn ký tự sau khi gán tmstt.second
+                if (ss.rdbuf()->in_avail() != 0) // kiểm tra còn dữ liệu trong bộ nhớ đệm của stringstream hay không
+                                                 //rdbuf()(read buffer): la mot phuong thuc cua doi tuong stream, dung de tra ve 1 con tro lien ket voi bo nho dem cua 1 doi tuong stream
+                                                 //in_avail(): dung de tra ve so byte con lai trong bo nho dem truoc khi duoc truyen vao doi tuong stream, neu bang khong thi khong co du lieu trong nguon
+                {
+                    getline(ss, tmsave, '/');
+                    tmet.day = safeStoi(tmsave);
+                    if (tmet.day > 0)
+                    {
+                        getline(ss, tmsave, '/');
+                        tmet.month = safeStoi(tmsave);
+                        getline(ss, tmsave, '-');
+                        tmet.year = safeStoi(tmsave);
+                        getline(ss, tmsave, ':');
+                        tmet.hour = safeStoi(tmsave);
+                        getline(ss, tmsave, ':');
+                        tmet.minute = safeStoi(tmsave);
+                        getline(ss, tmsave);
+                        tmet.second = safeStoi(tmsave);
+                    }
+                }
+
+                Event tmp(tmtieude, tmmota, tmstt, tmet);
                 events.push_back(tmp);
             }
             file.close();
@@ -97,11 +135,12 @@ void qltt::writedata()
 {
     vector<string> savevector;
     string tmtieude, tmmota, tmyear, tmmonth, tmday, tmhour, tmminute, tmsecond, tmsave;
-    thoigian tmstt;
+    thoigian tmstt, tmet;
     for (int i = 0; i < events.size(); i++)
     {
-        tmtieude =  events[i].gettieude();
-        tmmota =  events[i].getmota();
+        tmet = events[i].getet();
+        tmtieude = events[i].gettieude();
+        tmmota = events[i].getmota();
         tmstt = events[i].getstt();
         tmyear = to_string(tmstt.getyear());
         tmmonth = to_string(tmstt.getmonth());
@@ -109,7 +148,17 @@ void qltt::writedata()
         tmhour = to_string(tmstt.gethour());
         tmminute = to_string(tmstt.getminute());
         tmsecond = to_string(tmstt.getsecond());
-        tmsave = tmtieude + "|" + tmmota + "|" +  tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+        tmsave = tmtieude + "|" + tmmota + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+        if (tmet.getday() > 0)
+        {
+            tmyear = to_string(tmet.getyear());
+            tmmonth = to_string(tmet.getmonth());
+            tmday = to_string(tmet.getday());
+            tmhour = to_string(tmet.gethour());
+            tmminute = to_string(tmet.getminute());
+            tmsecond = to_string(tmet.getsecond());
+            tmsave = tmsave + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+        }
         savevector.push_back(tmsave);
     }
     string input = access.filename;
@@ -129,6 +178,7 @@ void qltt::writedata()
         cout << "Khong the truy cap du lieu\n";
     }
 }
+
 void qltt::print()
 {
     if (events.empty())
@@ -139,10 +189,11 @@ void qltt::print()
 
     for (auto &ev : events)
     {
-        cout << "Tieu de:"<<ev.gettieude() << endl;
-        cout <<"Mo ta: "<< ev.getmota() << endl;
-        cout <<"Thoi gian bat dau: "<< ev.getstt() << endl;
-        if (ev.getet() != 0)
+        cout << "Tieu de:" << ev.gettieude() << endl;
+        cout << "Mo ta: " << ev.getmota() << endl;
+        cout << "Thoi gian bat dau: " << ev.getstt() << endl;
+        thoigian tmet = ev.getet();
+        if (tmet.day > 0)
         {
             cout << "Thoi gian ket thuc: " << ev.getet() << endl;
         }
@@ -167,7 +218,7 @@ void qltt::add()
     if (tmmota == "-1")
         return;
 
-    cout << "Nhap thoi gian bat dau (dd/mm/yyyy-hh:mm:ss, nhap -1 de quay lai menu): ";
+    cout << "Nhap thoi gian bat dau\n";
     if (!tmstartime.setinput())
         return;
 
@@ -236,6 +287,7 @@ void qltt::fix()
         cout << "- Tieu de: " << events[i].gettieude() << endl;
         cout << "- Mo ta: " << events[i].getmota() << endl;
         cout << "- Bat dau: " << events[i].getstt() << endl;
+        cout << "- Ket thuc: " << events[i].getet() << endl;
     }
 
     int choice;
@@ -253,7 +305,7 @@ void qltt::fix()
 
     Event &selectedEvent = events[choice - 1];
     string tieude, mota;
-    thoigian startTime;
+    thoigian startTime, endTime;
 
     cout << "Nhap tieu de moi (tieu de hien tai: " << selectedEvent.gettieude() << ", nhap -1 de quay lai): ";
     getline(cin, tieude);
@@ -276,8 +328,20 @@ void qltt::fix()
     cout << "Nhap thoi gian bat dau moi (thoi gian hien tai: " << selectedEvent.getstt() << ", nhap -1 de quay lai): ";
     if (!startTime.setinput())
         return;
+    int choose;
+    cout << "Ban co muon them thoi gian ket thuc khong?\n";
+    cout << "1. Co            2. Khong (nhap -1 de quay lai menu)\n";
+    cin >> choose;
+    if (choose == -1)
+        return;
 
+    if (choose == 1)
+    {
+        if (!endTime.setinput())
+            return;
+    }
     selectedEvent.setstt(startTime);
+    selectedEvent.setet(endTime);
     cout << "Da cap nhat thong tin su kien thanh cong.\n";
 }
 

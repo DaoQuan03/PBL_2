@@ -25,6 +25,8 @@ public:
     void writedata();
     void creacc();
     void checkdata();
+    bool isValidNumber(const std::string& );
+    int safeStoi(const std::string& );
 };
 
 #endif // QLTT_H
