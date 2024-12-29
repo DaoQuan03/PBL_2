@@ -4,12 +4,12 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <limits>
+//#include <limits>:cung cap cac hang so  de xac dinh gioi han cua cac kieu du lieu
 #include <string>
 #include <iomanip>
-#include <sstream>
-#include <chrono>
-#include <thread>
+#include <sstream>      //Thu vien cung cap cac lop de lam viec voi cac chuoi ky tu, cho phep su chuoi ky tu lam nguon du lieu hoac la noi luu tru du lieu
+#include <chrono>       //Thu vien dung de lam viec voi thoi gian, tinh toan khoang thoi gian voi cac ham co san va nhung don vi thoi gian khac nhau
+
 using namespace std;
 
 class thoigian
@@ -29,6 +29,7 @@ public:
     static bool isLeapYear(int);
     static thoigian getCurrentTime();
     thoigian timeUntil(const thoigian &other) const;
+    void checktime();
     
     void setday(int);
     void setmonth(int);
