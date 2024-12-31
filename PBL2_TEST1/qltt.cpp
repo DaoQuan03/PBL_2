@@ -186,7 +186,8 @@ void qltt::print()
         cout << "Khong co su kien de hien thi.\n";
         return;
     }
-
+    heapsort sort;
+    sort.heapsorT(events);
     for (auto &ev : events)
     {
         cout << "Tieu de:" << ev.gettieude() << endl;
@@ -381,3 +382,4 @@ void qltt::countdown()
     cout << timeRemaining.day << " ngay, " << timeRemaining.hour << " gio, "
          << timeRemaining.minute << " phut, " << timeRemaining.second << " giay.\n";
 }
+

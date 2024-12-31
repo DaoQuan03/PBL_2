@@ -1,6 +1,6 @@
-#include <iostream>
-#include <string>
-#include <iomanip>
+#ifndef BASEQLTT_H
+#define BASEQLTT_H
+
 
 using namespace std;
 
@@ -12,3 +12,5 @@ class base_qltt
     virtual void erase() = 0;
     virtual void fix() = 0;
 };
+
+#endif

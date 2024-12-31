@@ -50,3 +50,25 @@ void Event::setet(const thoigian tmet)
 {
     this->endTime = tmet;
 }
+
+double Event::calltime()
+{
+    tm cal={};
+    cal.tm_mday=startTime.getday();
+    cal.tm_mon=startTime.getmonth()-1;
+    cal.tm_year=startTime.getyear()-1970;
+    cal.tm_hour=startTime.gethour();
+    cal.tm_min=startTime.getminute();
+    cal.tm_sec=startTime.getsecond();
+
+    // Lấy thời gian hiện tại
+    auto now = chrono::system_clock::now();
+    time_t nowTime = chrono::system_clock::to_time_t(now);
+
+    // Chuyển đổi thời gian nhập và thời gian hiện tại thành std::time_t
+    time_t callTimeT = mktime(&cal);       //La mot ham trong thu vien c_time dung de chuyen doi 1 struct_tm sang kieu time_t(la so giay ke tu 1/1/1970)
+
+    // Tính khoảng thời gian chênh lệch
+    double difference = difftime(callTimeT, nowTime);      //difftime():dung de tinh toan so giay giua hai thoi diem
+    return difference;
+}

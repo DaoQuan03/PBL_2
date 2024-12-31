@@ -14,6 +14,7 @@ private:
     bool operator==(const Event &);
 
 public:
+    double calltime();
     const string gettieude();
     const string getmota();
     thoigian getstt();
