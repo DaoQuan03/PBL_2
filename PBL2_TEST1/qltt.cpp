@@ -41,11 +41,12 @@ void qltt::checkdata()
     }
 }
 
-bool qltt::isValidNumber(const string &s) //Kiem tra xem chuoi dau vao co phai la 1 so hoac rong hay khong
+bool qltt::isValidNumber(const string &s) // Check if the input string is a valid number or empty
 {
-    return !s.empty() && all_of(s.begin(), s.end(), ::isdigit); //neu chuoi rong, tra ve false
-                                                                //all_of(begin,end,condition): kiem tra tat ca cac phan tu trong day co thoa man dieu kien nao do hay khong
-}                                                               //::isdigit: kiem tra 1 ky tu co phai la 1 so tu 0-9 hay khong
+    return !s.empty() && all_of(s.begin(), s.end(), ::isdigit); // if empty string, return false
+                                                                // all_of(begin, end, condition): checks if all elements satisfy the condition
+                                                                // ::isdigit: checks if a character is a number from 0-9
+}
 
 int qltt::safeStoi(const string &s)
 {
@@ -53,7 +54,7 @@ int qltt::safeStoi(const string &s)
     {
         return stoi(s);
     }
-    throw invalid_argument("Invalid number: " + s); //la mot ngoai le(exception), dung de thong bao 1 doi so khong hop le da duoc truyen vao
+    throw invalid_argument("Invalid number: " + s); // an exception used to notify that an invalid argument has been passed
 }
 
 void qltt::credata()
@@ -62,23 +63,23 @@ void qltt::credata()
     {
         thoigian tmstt, tmet;
         string input = access.filename;
-        string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+        string foldername = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
         fs::path filepath = fs::path(foldername) / input;
         ifstream file(filepath);
         if (!file)
         {
-            cout << "Khong the truy cap duoc du lieu\n";
+            cout << "Cannot access data\n";
             return;
         }
         char check;
-        file.get(check);    //Lay ki tu dau tien de kiem tra xem da co du lieuu ve su kien cua nguoi dung trong data chua
-        if (file.eof())     //Kiem tra con tro da di den cuoi cung chua
+        file.get(check);    // Get the first character to check if user event data exists in the file
+        if (file.eof())     // Check if the pointer has reached the end
         {
-            cout << "Ban chua tao thong tin cua su kien\n";
+            cout << "You have not created event information\n";
         }
         else
         {
-            file.unget();    //Neu co du lieu, tra lai ki tu dau tien vua lay o tren
+            file.unget();    // If there is data, return the first character fetched earlier
             string line, tmtieude, tmmota;
             string tmsave;
             while (getline(file, line))
@@ -101,10 +102,10 @@ void qltt::credata()
                 getline(ss, tmsave,'|');
                 tmstt.second = safeStoi(tmsave);
 
-                // Kiểm tra nếu không còn ký tự sau khi gán tmstt.second
-                if (ss.rdbuf()->in_avail() != 0) // kiểm tra còn dữ liệu trong bộ nhớ đệm của stringstream hay không
-                                                 //rdbuf()(read buffer): la mot phuong thuc cua doi tuong stream, dung de tra ve 1 con tro lien ket voi bo nho dem cua 1 doi tuong stream
-                                                 //in_avail(): dung de tra ve so byte con lai trong bo nho dem truoc khi duoc truyen vao doi tuong stream, neu bang khong thi khong co du lieu trong nguon
+                // Check if there are no more characters after assigning tmstt.second
+                if (ss.rdbuf()->in_avail() != 0) // Check if there is data left in the stringstream buffer
+                                                 // rdbuf(): a method of the stream object to get a pointer to its memory buffer
+                                                 // in_avail(): checks how many bytes remain in the buffer before being passed to the stream object
                 {
                     getline(ss, tmsave, '/');
                     tmet.day = safeStoi(tmsave);
@@ -136,6 +137,11 @@ void qltt::writedata()
     vector<string> savevector;
     string tmtieude, tmmota, tmyear, tmmonth, tmday, tmhour, tmminute, tmsecond, tmsave;
     thoigian tmstt, tmet;
+
+    cout << "\n==========================================\n";
+    cout << "|         SAVING EVENTS TO FILE         |\n";
+    cout << "==========================================\n";
+
     for (int i = 0; i < events.size(); i++)
     {
         tmet = events[i].getet();
@@ -149,6 +155,7 @@ void qltt::writedata()
         tmminute = to_string(tmstt.getminute());
         tmsecond = to_string(tmstt.getsecond());
         tmsave = tmtieude + "|" + tmmota + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+
         if (tmet.getday() > 0)
         {
             tmyear = to_string(tmet.getyear());
@@ -161,216 +168,335 @@ void qltt::writedata()
         }
         savevector.push_back(tmsave);
     }
+
     string input = access.filename;
-    string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    string foldername = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
     fs::path filepath = fs::path(foldername) / input;
+
     ofstream file(filepath);
+
     if (file.is_open())
     {
+        cout << "Saving data to: " << filepath << "\n";
         for (int i = 0; i < savevector.size(); i++)
         {
             file << savevector[i] << endl;
         }
         file.close();
+        cout << "\n==========================================\n";
+        cout << "|        EVENTS SAVED SUCCESSFULLY       |\n";
+        cout << "==========================================\n\n";
     }
     else
     {
-        cout << "Khong the truy cap du lieu\n";
+        cout << "\n==========================================\n";
+        cout << "|        ERROR: Cannot access data       |\n";
+        cout << "==========================================\n";
     }
 }
+
 
 void qltt::print()
 {
     if (events.empty())
     {
-        cout << "Khong co su kien de hien thi.\n";
+        cout << "\n==========================================\n";
+        cout << "|          NO EVENTS AVAILABLE           |\n";
+        cout << "==========================================\n\n";
         return;
     }
+
     heapsort sort;
     sort.heapsorT(events);
-    for (auto &ev : events)
+
+    cout << "\n==========================================\n";
+    cout << "|                EVENT LIST              |\n";
+    cout << "==========================================\n\n";
+
+    for (size_t i = 0; i < events.size(); ++i)
     {
-        cout << "Tieu de:" << ev.gettieude() << endl;
-        cout << "Mo ta: " << ev.getmota() << endl;
-        cout << "Thoi gian bat dau: " << ev.getstt() << endl;
-        thoigian tmet = ev.getet();
-        if (tmet.day > 0)
+        cout << "Event " << i + 1 << ":\n";
+        cout << "------------------------------------------\n";
+        cout << "| Title       : " << events[i].gettieude() << "\n";
+        cout << "| Description : " << events[i].getmota() << "\n";
+        cout << "| Start Time  : " << events[i].getstt() << "\n";
+        
+        // Display End Time if available
+        if (events[i].getet().getday() > 0)
         {
-            cout << "Thoi gian ket thuc: " << ev.getet() << endl;
+            cout << "| End Time    : " << events[i].getet() << "\n";
         }
-        cout << "--------------------------------------------" << endl;
+        else
+        {
+            cout << "| End Time    : Not specified\n";
+        }
+        
+        cout << "------------------------------------------\n";
     }
 }
+
 
 void qltt::add()
 {
-    int choice;
     string tmtieude, tmmota;
     thoigian tmstartime, tmendtime;
+    int choice;
 
-    cout << "Hay them mot su kien moi" << endl;
-    cout << "Nhap tieu de (nhap -1 de quay lai menu): ";
+    cout << "\n==========================================\n";
+    cout << "|              ADD NEW EVENT             |\n";
+    cout << "==========================================\n";
+
+    cout << "\nEnter the title of the event (enter '-1' to return to menu): ";
     getline(cin, tmtieude);
-    if (tmtieude == "-1")
-        return;
+    if (tmtieude == "-1") return;
 
-    cout << "Nhap mo ta (nhap -1 de quay lai menu): ";
+    cout << "\nEnter the description of the event (enter '-1' to return to menu): ";
     getline(cin, tmmota);
-    if (tmmota == "-1")
-        return;
+    if (tmmota == "-1") return;
 
-    cout << "Nhap thoi gian bat dau\n";
-    if (!tmstartime.setinput())
-        return;
+    cout << "\nEnter the start time of the event:\n";
+    if (!tmstartime.setinput()) return;
 
-    cout << "Ban co muon them thoi gian ket thuc khong?\n";
-    cout << "1. Co            2. Khong (nhap -1 de quay lai menu)\n";
+    cout << "\n==========================================\n";
+    cout << "|              ADD END TIME?             |\n";
+    cout << "==========================================\n";
+    cout << "1. Yes        2. No\n";
+    cout << "Your choice (enter '-1' to return to menu): ";
     cin >> choice;
-    if (choice == -1)
-        return;
+    cin.ignore();
 
-    if (choice == 1)
-    {
-        if (!tmendtime.setinput())
-            return;
+    if (choice == -1) return;
+
+    if (choice == 1) {
+        cout << "\nEnter the end time of the event:\n";
+        if (!tmendtime.setinput()) return;
     }
 
-    Event tmp(tmtieude, tmmota, tmstartime, tmendtime);
-    events.push_back(tmp);
+    // Final confirmation
+    char confirm;
+    cout << "\n==========================================\n";
+    cout << "|        CONFIRM EVENT ADDITION?         |\n";
+    cout << "==========================================\n";
+    cout << "Are you sure you want to add this event? (Y/N): ";
+    cin >> confirm;
+
+    if (confirm == 'Y' || confirm == 'y') {
+        Event tmp(tmtieude, tmmota, tmstartime, tmendtime);
+        events.push_back(tmp);
+
+        cout << "\n==========================================\n";
+        cout << "|       EVENT ADDED SUCCESSFULLY        |\n";
+        cout << "==========================================\n\n";
+    } else {
+        cout << "\n==========================================\n";
+        cout << "|         EVENT ADDITION CANCELED        |\n";
+        cout << "==========================================\n\n";
+    }
 }
+
 
 void qltt::erase()
 {
     if (events.empty())
     {
-        cout << "Khong co su kien de xoa.\n";
+        cout << "\n==========================================\n";
+        cout << "|          NO EVENTS TO DELETE           |\n";
+        cout << "==========================================\n\n";
         return;
     }
 
-    cout << "Chon su kien de xoa (nhap -1 de quay lai menu):\n";
+    heapsort sort;
+    sort.heapsorT(events);
+
+    cout << "\n==========================================\n";
+    cout << "|           SELECT EVENT TO DELETE       |\n";
+    cout << "==========================================\n";
+
     for (int i = 0; i < events.size(); ++i)
     {
         cout << i + 1 << ". " << endl;
-        cout << "- Tieu de: " << events[i].gettieude() << endl;
-        cout << "- Mo ta: " << events[i].getmota() << endl;
-        cout << "- Bat dau: " << events[i].getstt() << endl;
+        cout << "- Title       : " << events[i].gettieude() << endl;
+        cout << "- Description : " << events[i].getmota() << endl;
+        cout << "- Start time  : " << events[i].getstt() << endl;
+        cout << "- End time    : " << events[i].getet() << endl;
+        cout << "------------------------------------------" << endl;
     }
 
-    int choice;
-    cout << "Nhap so thu tu cua su kien: ";
-    cin >> choice;
-    cin.ignore();
-    if (choice == -1)
+    cout << "\nEnter the number of the event to delete (enter -1 to return to menu): ";
+    int index;
+    cin >> index;
+
+    if (index == -1)
         return;
 
-    if (choice < 1 || choice > events.size())
+    if (index < 1 || index > events.size())
     {
-        cout << "Lua chon khong hop le.\n";
+        cout << "\n==========================================\n";
+        cout << "|             INVALID CHOICE             |\n";
+        cout << "==========================================\n";
         return;
     }
 
-    events.erase(events.begin() + (choice - 1));
-    cout << "Da xoa su kien.\n";
+    cout << "\n==========================================\n";
+    cout << "|   CONFIRM DELETE EVENT:                |\n";
+    cout << "| - Title       : " << events[index - 1].gettieude() << endl;
+    cout << "| - Description : " << events[index - 1].getmota() << endl;
+    cout << "| - Start time  : " << events[index - 1].getstt() << endl;
+    cout << "| - End time    : " << events[index - 1].getet() << endl;
+    cout << "==========================================\n";
+
+    char confirm;
+    cout << "Are you sure you want to delete this event? (Y/N): ";
+    cin >> confirm;
+
+    if (confirm == 'Y' || confirm == 'y')
+    {
+        events.erase(events.begin() + index - 1);
+        cout << "\n==========================================\n";
+        cout << "|       EVENT DELETED SUCCESSFULLY       |\n";
+        cout << "==========================================\n\n";
+    }
+    else
+    {
+        cout << "\n==========================================\n";
+        cout << "|        DELETE ACTION CANCELED          |\n";
+        cout << "==========================================\n\n";
+    }
 }
+
 
 void qltt::fix()
 {
     if (events.empty())
     {
-        cout << "Khong co su kien de chinh sua.\n";
+        cout << "\n==========================================\n";
+        cout << "|          NO EVENTS TO MODIFY           |\n";
+        cout << "==========================================\n\n";
         return;
     }
 
-    cout << "Danh sach su kien:\n";
+    heapsort sort;
+    sort.heapsorT(events);
+
+    cout << "\n==========================================\n";
+    cout << "|                EVENT LIST              |\n";
+    cout << "==========================================\n";
+
     for (int i = 0; i < events.size(); ++i)
     {
         cout << i + 1 << ". " << endl;
-        cout << "- Tieu de: " << events[i].gettieude() << endl;
-        cout << "- Mo ta: " << events[i].getmota() << endl;
-        cout << "- Bat dau: " << events[i].getstt() << endl;
-        cout << "- Ket thuc: " << events[i].getet() << endl;
+        cout << "- Title       : " << events[i].gettieude() << endl;
+        cout << "- Description : " << events[i].getmota() << endl;
+        cout << "- Start time  : " << events[i].getstt() << endl;
+        cout << "- End time    : " << events[i].getet() << endl;
+        cout << "------------------------------------------" << endl;
     }
 
+    cout << "\nEnter the number of the event to modify (enter -1 to return to menu): ";
     int choice;
-    cout << "Nhap so thu tu cua su kien can chinh sua (nhap -1 de quay lai menu): ";
     cin >> choice;
     cin.ignore();
+
     if (choice == -1)
         return;
 
     if (choice < 1 || choice > events.size())
     {
-        cout << "Lua chon khong hop le.\n";
+        cout << "\n==========================================\n";
+        cout << "|             INVALID CHOICE             |\n";
+        cout << "==========================================\n";
         return;
     }
 
     Event &selectedEvent = events[choice - 1];
-    string tieude, mota;
+    string title, description;
     thoigian startTime, endTime;
 
-    cout << "Nhap tieu de moi (tieu de hien tai: " << selectedEvent.gettieude() << ", nhap -1 de quay lai): ";
-    getline(cin, tieude);
-    if (tieude == "-1")
+    cout << "\n==========================================\n";
+    cout << "|       MODIFYING SELECTED EVENT         |\n";
+    cout << "==========================================\n";
+    cout << "Current Title: " << selectedEvent.gettieude() << "\n";
+    cout << "Enter new title (leave blank to keep current, -1 to return): ";
+    getline(cin, title);
+    if (title == "-1")
         return;
-    if (!tieude.empty())
-    {
-        selectedEvent.settieude(tieude);
-    }
+    if (!title.empty())
+        selectedEvent.settieude(title);
 
-    cout << "Nhap mo ta moi (mo ta hien tai: " << selectedEvent.getmota() << ", nhap -1 de quay lai): ";
-    getline(cin, mota);
-    if (mota == "-1")
+    cout << "Current Description: " << selectedEvent.getmota() << "\n";
+    cout << "Enter new description (leave blank to keep current, -1 to return): ";
+    getline(cin, description);
+    if (description == "-1")
         return;
-    if (!mota.empty())
-    {
-        selectedEvent.setmota(mota);
-    }
+    if (!description.empty())
+        selectedEvent.setmota(description);
 
-    cout << "Nhap thoi gian bat dau moi (thoi gian hien tai: " << selectedEvent.getstt() << ", nhap -1 de quay lai): ";
+    cout << "Current Start Time: " << selectedEvent.getstt() << "\n";
+    cout << "Enter new start time (-1 to return):\n";
     if (!startTime.setinput())
         return;
+
     int choose;
-    cout << "Ban co muon them thoi gian ket thuc khong?\n";
-    cout << "1. Co            2. Khong (nhap -1 de quay lai menu)\n";
+    cout << "Do you want to modify the end time?\n";
+    cout << "1. Yes            2. No (leave current end time, -1 to return)\n";
     cin >> choose;
+    cin.ignore();
+
     if (choose == -1)
         return;
 
     if (choose == 1)
     {
+        cout << "Enter new end time (-1 to return):\n";
         if (!endTime.setinput())
             return;
+        selectedEvent.setet(endTime);
     }
+
     selectedEvent.setstt(startTime);
-    selectedEvent.setet(endTime);
-    cout << "Da cap nhat thong tin su kien thanh cong.\n";
+
+    cout << "\n==========================================\n";
+    cout << "|      EVENT MODIFIED SUCCESSFULLY       |\n";
+    cout << "==========================================\n\n";
 }
+
 
 void qltt::countdown()
 {
     if (events.empty())
     {
-        cout << "Khong co su kien de dem nguoc.\n";
+        cout << "\n==========================================\n";
+        cout << "|        NO EVENTS TO COUNTDOWN          |\n";
+        cout << "==========================================\n\n";
         return;
     }
 
-    cout << "Chon su kien de dem nguoc:\n";
+    heapsort sort;
+    sort.heapsorT(events);
+
+    cout << "\n==========================================\n";
+    cout << "|               EVENTS LIST              |\n";
+    cout << "==========================================\n";
+
     for (int i = 0; i < events.size(); ++i)
     {
         cout << i + 1 << ". " << endl;
-        cout << "- Tieu de: " << events[i].gettieude() << endl;
-        cout << "- Mo ta: " << events[i].getmota() << endl;
-        cout << "- Bat dau: " << events[i].getstt() << endl;
+        cout << "- Title       : " << events[i].gettieude() << endl;
+        cout << "- Description : " << events[i].getmota() << endl;
+        cout << "- Start time  : " << events[i].getstt() << endl;
+        cout << "------------------------------------------" << endl;
     }
 
+    cout << "\nEnter the number of the event to countdown: ";
     int choice;
-    cout << "Nhap so thu tu cua su kien: ";
     cin >> choice;
     cin.ignore();
 
     if (choice < 1 || choice > events.size())
     {
-        cout << "Lua chon khong hop le.\n";
+        cout << "\n==========================================\n";
+        cout << "|             INVALID CHOICE             |\n";
+        cout << "==========================================\n";
         return;
     }
 
@@ -378,8 +504,15 @@ void qltt::countdown()
     thoigian eventTime = events[choice - 1].getstt();
     thoigian timeRemaining = currentTime.timeUntil(eventTime);
 
-    cout << "Thoi gian con lai den su kien \"" << events[choice - 1].gettieude() << "\":\n";
-    cout << timeRemaining.day << " ngay, " << timeRemaining.hour << " gio, "
-         << timeRemaining.minute << " phut, " << timeRemaining.second << " giay.\n";
+    cout << "\n==========================================\n";
+    cout << "|        COUNTDOWN TO SELECTED EVENT     |\n";
+    cout << "==========================================\n";
+    cout << "Event Title      : " << events[choice - 1].gettieude() << endl;
+    cout << "Event Start Time : " << eventTime << endl;
+    cout << "Time Remaining   : " << timeRemaining.day << " days, " 
+         << timeRemaining.hour << " hours, "
+         << timeRemaining.minute << " minutes, "
+         << timeRemaining.second << " seconds." << endl;
+    cout << "==========================================\n\n";
 }
 
