@@ -63,7 +63,7 @@ void qltt::credata()
     {
         thoigian tmstt, tmet;
         string input = access.filename;
-        string foldername = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+        string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
         fs::path filepath = fs::path(foldername) / input;
         ifstream file(filepath);
         if (!file)
@@ -170,7 +170,7 @@ void qltt::writedata()
     }
 
     string input = access.filename;
-    string foldername = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+    string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
     fs::path filepath = fs::path(foldername) / input;
 
     ofstream file(filepath);
@@ -515,4 +515,3 @@ void qltt::countdown()
          << timeRemaining.second << " seconds." << endl;
     cout << "==========================================\n\n";
 }
-

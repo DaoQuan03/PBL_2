@@ -10,7 +10,7 @@ istream &operator>>(istream &is, thoigian &t)
 
 ostream &operator<<(ostream &os, const thoigian &t)
 {
-    return os << "At " << t.hour << "h" << t.minute << "m" << t.second << "s" << " on " << t.day << "/" << t.month << "/" << t.year;
+    return os << "Luc " << t.hour << "h" << t.minute << "p" << t.second << "s" << " vao ngay " << t.day << "/" << t.month << "/" << t.year;
 }
 
 bool thoigian::operator==(const thoigian &dt1)
@@ -41,17 +41,17 @@ bool thoigian::isLeapYear(int year)
 bool thoigian::setinput()
 {
     int tmday, tmmonth, tmyear, tmhour, tmminute, tmsecond;
-    cout << "Enter day: ";
+    cout << "Nhap ngay: ";
     cin >> tmday;
-    cout << "Enter month: ";
+    cout << "Nhap thang: ";
     cin >> tmmonth;
-    cout << "Enter year: ";
+    cout << "Nhap nam: ";
     cin >> tmyear;
-    cout << "Enter hour: ";
+    cout << "Nhap gio: ";
     cin >> tmhour;
-    cout << "Enter minute: ";
+    cout << "Nhap phut: ";
     cin >> tmminute;
-    cout << "Enter second: ";
+    cout << "Nhap giay: ";
     cin >> tmsecond;
 
     setday(tmday);
@@ -64,32 +64,32 @@ bool thoigian::setinput()
     int daysInMonth[] = {0, 31, 28 + isLeapYear(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (this->day < 1 || this->day > daysInMonth[month])
     {
-        cout << "The day is not valid for the month " << month << ", please enter the day again: ";
+        cout << "Ngay khong hop le cho thang " << month << ", vui long nhap lai ngay: ";
         cin >> this->day;
         cin.ignore();
     }
     if (this->month < 1 || this->month > 12)
     {
-        cout << "You entered an incorrect month (1-12), please enter the month again: ";
+        cout << "Ban da nhap sai quy dinh cua thang(1-12), vui long nhap lai thang: ";
         cin >> this->month;
         cin.ignore();
     }
 
     if (this->hour < 0 || this->hour > 23)
     {
-        cout << "You entered an incorrect hour (0-23), please enter the hour again: ";
+        cout << "Ban da nhap sai quy dinh cua gio(0-23), vui long nhap lai gio: ";
         cin >> this->hour;
         cin.ignore();
     }
     if (this->minute < 0 || this->minute > 60)
     {
-        cout << "You entered an incorrect minute (0-60), please enter the minute again: ";
+        cout << "Ban da nhap sai quy dinh cua phut(0-60), vui long nhap lai phut: ";
         cin >> this->minute;
         cin.ignore();
     }
     if (this->second < 0 || this->second > 60)
     {
-        cout << "You entered an incorrect second (0-60), please enter the second again: ";
+        cout << "Ban da nhap sai quy dinh cua giay(0-60), vui long nhap lai giay: ";
         cin >> this->second;
         cin.ignore();
     }
@@ -164,22 +164,22 @@ void thoigian::setsecond(int second)
     this->second = second;
 }
 
-int thoigian::getyear() 
+int thoigian::getyear()
 {
     return this->year;
 }
 
-int thoigian::getmonth() 
+int thoigian::getmonth()
 {
     return this->month;
 }
 
-int thoigian::getday() 
+int thoigian::getday()
 {
     return this->day;
 }
 
-int thoigian::gethour() 
+int thoigian::gethour()
 {
     return this->hour;
 }
@@ -196,10 +196,11 @@ int thoigian::getsecond()
 
 void thoigian::checktime()
 {
-    auto now = chrono::system_clock::now();
-    time_t now_time = chrono::system_clock::to_time_t(now);
+    auto now = chrono::system_clock::now();                 // Lấy thời gian của hệ thống
+    time_t now_time = chrono::system_clock::to_time_t(now); // Chuyển đổi thời gian hiện tại thành time_t
 
-    std::tm *ltm = std::localtime(&now_time);
+    // Chuyển đổi thành struct tm
+    std::tm *ltm = std::localtime(&now_time); // struct tm lưu trữ các thành phần của thời gian
 
     int daysys = ltm->tm_mday, monthsys = ltm->tm_mon + 1, yearsys = ltm->tm_year + 1900, hoursys = ltm->tm_hour, minsys = ltm->tm_min, secsys = ltm->tm_sec;
 
@@ -242,7 +243,7 @@ void thoigian::checktime()
             }
         }
     }
-    cout << "The time you entered is earlier than the current time, please enter the time again\n";
+    cout << "Thoi gian ban nhap som hon thoi gian hien tai, vui long nhap lai\n";
     setinput();
     return checktime();
 }

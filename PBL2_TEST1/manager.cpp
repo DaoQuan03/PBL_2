@@ -10,7 +10,7 @@ manager::~manager()
 
 void manager::print()
 {
-    string basedata = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+    string basedata = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
     
     // Đầu ra bắt đầu
     cout << "\n==========================================\n";
@@ -93,7 +93,7 @@ void manager::add()
     save.push_back(ustmp);
 
     // Kiểm tra thư mục và tạo tài khoản
-    string base = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+    string base = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
     string accname = ustmp.getname() + "-" + ustmp.getpass() + ".txt";
     
     if (!fs::exists(base))
@@ -188,7 +188,7 @@ void manager::add()
         // Lưu thông tin vào tệp dữ liệu của tài khoản
         string inputmp = ustmp.getname() + "-" + ustmp.getpass() + "txt";
         string input = inputmp;
-        string foldername = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+        string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
         fs::path filepath = fs::path(foldername) / input;
         ofstream file(filepath);
 
