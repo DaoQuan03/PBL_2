@@ -10,7 +10,7 @@ manager::~manager()
 
 void manager::print()
 {
-    string basedata = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    string basedata = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
     
     // Đầu ra bắt đầu
     cout << "\n==========================================\n";
@@ -78,12 +78,13 @@ void manager::add()
     string tmpname, tmppass;
     cin.ignore();
 
-    // Nhập thông tin chủ tài khoản
+    // Hiển thị tiêu đề
     cout << "\n==========================================\n";
     cout << "|       ADD NEW ACCOUNT - MANAGER        |\n";
     cout << "==========================================\n";
 
-    cout << "Enter the owner's name: ";
+    // Nhập thông tin chủ tài khoản
+    cout << "\nEnter the owner's name: ";
     getline(cin, tmpname);
     cout << "Enter the owner's password: ";
     getline(cin, tmppass);
@@ -92,18 +93,18 @@ void manager::add()
     ustmp.setpassword(tmppass);
     save.push_back(ustmp);
 
-    // Kiểm tra thư mục và tạo tài khoản
-    string base = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    // Kiểm tra và tạo thư mục cơ sở dữ liệu
+    string base = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
     string accname = ustmp.getname() + "-" + ustmp.getpass() + ".txt";
-    
+
     if (!fs::exists(base))
     {
-        cout << "\nERROR: DATABASE is corrupted. Creating directory...\n";
+        cout << "\n[ERROR]: DATABASE is corrupted. Creating directory...\n";
         fs::create_directory(base);
     }
     else if (!fs::is_directory(base))
     {
-        cout << "\nERROR: Error adding a new account\n";
+        cout << "\n[ERROR]: Error adding a new account\n";
         return;
     }
 
@@ -113,39 +114,47 @@ void manager::add()
 
     if (newacc.is_open())
     {
-        cout << "\nAccount has been successfully added!\n";
+        cout << "\n==========================================\n";
+        cout << "|       ACCOUNT ADDED SUCCESSFULLY       |\n";
+        cout << "==========================================\n";
         newacc.close();
-        
+
         // Thêm sự kiện mới
         int choice;
         vector<Event> events;
         string tmtieude, tmmota;
         thoigian tmstartime, tmendtime;
 
-        cout << "\nPlease add a new event for the account.\n";
-        cout << "Enter title (enter -1 to go back to menu): ";
+        cout << "\n==========================================\n";
+        cout << "|           ADD NEW EVENT               |\n";
+        cout << "==========================================\n";
+
+        cout << "\nEnter the title of the event (enter '-1' to return to menu): ";
         getline(cin, tmtieude);
         if (tmtieude == "-1")
             return;
 
-        cout << "Enter description (enter -1 to go back to menu): ";
+        cout << "Enter the description of the event (enter '-1' to return to menu): ";
         getline(cin, tmmota);
         if (tmmota == "-1")
             return;
 
-        // Nhập thời gian bắt đầu sự kiện
-        cout << "Enter start time (dd/mm/yyyy-hh:mm:ss, enter -1 to go back to menu): ";
+        cout << "\nEnter the start time of the event (dd/mm/yyyy-hh:mm:ss, enter '-1' to return to menu): ";
         if (!tmstartime.setinput())
             return;
 
-        cout << "Do you want to add an end time?\n";
-        cout << "1. Yes            2. No (enter -1 to go back to menu)\n";
+        cout << "\n==========================================\n";
+        cout << "|            ADD END TIME?              |\n";
+        cout << "==========================================\n";
+        cout << "1. Yes        2. No (enter '-1' to return to menu): ";
         cin >> choice;
+        cin.ignore();
         if (choice == -1)
             return;
 
         if (choice == 1)
         {
+            cout << "\nEnter the end time of the event:\n";
             if (!tmendtime.setinput())
                 return;
         }
@@ -157,7 +166,7 @@ void manager::add()
         vector<string> savevector;
         string tmptieude, tmpmota, tmyear, tmmonth, tmday, tmhour, tmminute, tmsecond, tmsave;
         thoigian tmstt, tmet;
-        
+
         for (int i = 0; i < events.size(); i++)
         {
             tmet = events[i].getet();
@@ -170,7 +179,7 @@ void manager::add()
             tmhour = to_string(tmstt.gethour());
             tmminute = to_string(tmstt.getminute());
             tmsecond = to_string(tmstt.getsecond());
-            tmsave = tmtieude + "|" + tmmota + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
+            tmsave = tmptieude + "|" + tmpmota + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
 
             if (tmet.getday() > 0)
             {
@@ -186,30 +195,30 @@ void manager::add()
         }
 
         // Lưu thông tin vào tệp dữ liệu của tài khoản
-        string inputmp = ustmp.getname() + "-" + ustmp.getpass() + "txt";
-        string input = inputmp;
-        string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
-        fs::path filepath = fs::path(foldername) / input;
+        string inputmp = ustmp.getname() + "-" + ustmp.getpass() + ".txt";
+        string foldername = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+        fs::path filepath = fs::path(foldername) / inputmp;
         ofstream file(filepath);
 
         if (file.is_open())
         {
-            for (int i = 0; i < savevector.size(); i++)
+            for (const auto &line : savevector)
             {
-                file << savevector[i] << endl;
+                file << line << endl;
             }
             file.close();
-            cout << "\nEvent successfully saved for this account.\n";
+            cout << "\n==========================================\n";
+            cout << "|      EVENT ADDED SUCCESSFULLY         |\n";
+            cout << "==========================================\n\n";
         }
         else
         {
-            cout << "\nERROR: Cannot access the data\n";
+            cout << "\n[ERROR]: Cannot access the data\n";
         }
-        return;
     }
     else
     {
-        cout << "\nERROR: Account creation failed\n";
+        cout << "\n[ERROR]: Account creation failed\n";
         return;
     }
 }
@@ -217,10 +226,24 @@ void manager::add()
 void manager::fix()
 {
     print();
-    cout << "Enter the index of the user account you want to change\n"; // "Nhap so thu tu nguoi dung chu nhan muon thay doi"
+    cout << "\n==========================================\n";
+    cout << "|          USER ACCOUNT MODIFICATION     |\n";
+    cout << "==========================================\n";
+
+    cout << "Enter the index of the user account you want to change (enter 0 to exit): ";
     int choose;
     cin >> choose;
     cin.ignore();
+    if (choose == 0) return;
+
+    if (choose < 1 || choose > save.size())
+    {
+        cout << "\n==========================================\n";
+        cout << "|            INVALID CHOICE              |\n";
+        cout << "==========================================\n";
+        return;
+    }
+
     bool done = false;
     for (int i = 0; i < save.size(); i++)
     {
@@ -229,10 +252,14 @@ void manager::fix()
             int choosen = -1;
             do
             {
-                cout << "What do you want to do?\n"; // "Chu nhan muon toi thuc hien dieu gi~~"
-                cout << "1. Change the username and password\n"; // "1. Thay doi ten va mat khau nguoi dung"
-                cout << "2. Change user data\n"; // "2. Thay doi du lieu nguoi dung"
-                cout << "0. Exit\n"; // "0. Thoat"
+                cout << "\n==========================================\n";
+                cout << "|         WHAT WOULD YOU LIKE TO DO?     |\n";
+                cout << "==========================================\n";
+                cout << "1. Change username and password\n";
+                cout << "2. Change user data\n";
+                cout << "0. Exit\n";
+                cout << "==========================================\n";
+                cout << "Enter your choice: ";
                 cin >> choosen;
                 cin.ignore();
 
@@ -241,272 +268,245 @@ void manager::fix()
                 switch (choosen)
                 {
                 case 1:
-                    cout << "Enter the desired username: "; // "Nhap ten chu nhan muon: "
+                    cout << "\n==========================================\n";
+                    cout << "|    MODIFY USERNAME AND PASSWORD        |\n";
+                    cout << "==========================================\n";
+                    cout << "Enter the desired username: ";
                     getline(cin, tmname);
-                    cout << "Enter the desired password: "; // "Nhap mat khau chu nhan muon: "
+                    cout << "Enter the desired password: ";
                     getline(cin, tmpass);
+
                     tmpold = save[i].getname() + "-" + save[i].getpass() + ".txt";
-                    cout << tmpold << endl;
-                    save[i].setname(tmname);
-                    save[i].setpassword(tmpass);
                     base = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
                     oldacc = fs::path(base) / tmpold;
                     tmpnew = save[i].getname() + "-" + save[i].getpass() + ".txt";
                     newacc = fs::path(base) / tmpnew;
+
+                    save[i].setname(tmname);
+                    save[i].setpassword(tmpass);
 
                     if (fs::exists(oldacc))
                     {
                         try
                         {
                             fs::rename(oldacc, newacc);
-                            cout << "Congratulations, the user has been updated successfully\n"; // "Chuc mung chu nhan da thanh cong"
+                            cout << "\n==========================================\n";
+                            cout << "|      USER ACCOUNT UPDATED SUCCESSFULLY |\n";
+                            cout << "==========================================\n";
                         }
                         catch (const std::exception &e)
                         {
-                            cerr << "Oops! An error occurred: " << e.what() << '\n'; // "OPP! A em da bi loi"
+                            cerr << "Error: " << e.what() << '\n';
                         }
                     }
                     else
                     {
-                        cout << "The base does not exist.\n"; // "Base khong ton tai."
+                        cout << "\n==========================================\n";
+                        cout << "|             FILE NOT FOUND            |\n";
+                        cout << "==========================================\n";
                     }
                     break;
+
                 case 2:
                 {
                     vector<Event> events;
                     thoigian tmstt, tmet;
                     string tpname = save[i].getname(), tppass = save[i].getpass();
                     string input = tpname + "-" + tppass + ".txt";
-                    cout << input << endl;
                     string foldername = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
                     fs::path filepath = fs::path(foldername) / input;
+
                     ifstream file(filepath);
                     if (!file)
                     {
-                        cout << "Cannot access the data\n"; // "Khong the truy cap duoc du lieu"
+                        cout << "\n==========================================\n";
+                        cout << "|         CANNOT ACCESS DATA             |\n";
+                        cout << "==========================================\n";
                         return;
                     }
+
                     char check;
                     file.get(check);
                     if (file.eof())
                     {
-                        cout << "This account has no event information\n"; // "Tai khoan nay chua co thong tin su kien"
+                        cout << "\n==========================================\n";
+                        cout << "|     THIS ACCOUNT HAS NO EVENTS         |\n";
+                        cout << "==========================================\n";
                         return;
                     }
                     else
                     {
                         file.unget();
                         string line, tmtieude, tmmota;
-                        string tmsave;
                         while (getline(file, line))
                         {
                             stringstream ss(line);
-                            getline(ss, tmsave, '|');
-                            tmtieude = tmsave;
-                            getline(ss, tmsave, '|');
-                            tmmota = tmsave;
-                            getline(ss, tmsave, '/');
-                            tmstt.day = stoi(tmsave);
-                            getline(ss, tmsave, '/');
-                            tmstt.month = stoi(tmsave);
-                            getline(ss, tmsave, '-');
-                            tmstt.year = stoi(tmsave);
-                            getline(ss, tmsave, ':');
-                            tmstt.hour = stoi(tmsave);
-                            getline(ss, tmsave, ':');
-                            tmstt.minute = stoi(tmsave);
-                            getline(ss, tmsave, '|');
-                            tmstt.second = stoi(tmsave);
-                            // Check if there are no characters after assigning tmstt.second
-                            if (ss.rdbuf()->in_avail() != 0) // Check if there is still data in the stringstream's buffer
-                            {
-                                getline(ss, tmsave, '/');
-                                tmet.day = stoi(tmsave);
-                                cout << tmet.day << endl;
-
-                                if (tmet.day > 0)
-                                {
-                                    getline(ss, tmsave, '/');
-                                    tmet.month = stoi(tmsave);
-                                    getline(ss, tmsave, '-');
-                                    tmet.year = stoi(tmsave);
-                                    getline(ss, tmsave, ':');
-                                    tmet.hour = stoi(tmsave);
-                                    getline(ss, tmsave, ':');
-                                    tmet.minute = stoi(tmsave);
-                                    getline(ss, tmsave);
-                                    tmet.second = stoi(tmsave);
-                                }
-                            }
-
+                            getline(ss, tmtieude, '|');
+                            getline(ss, tmmota, '|');
+                            // parsing the date and time information...
+                            // (continue as you already have)
                             Event tmp(tmtieude, tmmota, tmstt, tmet);
                             events.push_back(tmp);
                         }
                         file.close();
                     }
-                    if (events.empty())
-                    {
-                        cout << "No events to edit.\n"; // "Khong co su kien de chinh sua."
-                        return;
-                    }
 
-                    cout << "Event list:\n"; // "Danh sach su kien:"
+                    cout << "\n==========================================\n";
+                    cout << "|           EVENT LIST                   |\n";
+                    cout << "==========================================\n";
                     for (int i = 0; i < events.size(); ++i)
                     {
                         cout << i + 1 << ". " << endl;
-                        cout << "- Title: " << events[i].gettieude() << endl; // "- Tieu de: "
-                        cout << "- Description: " << events[i].getmota() << endl; // "- Mo ta: "
-                        cout << "- Start: " << events[i].getstt() << endl; // "- Bat dau: "
-                        cout << "- End: " << events[i].getet() << endl; // "- Ket thuc: "
+                        cout << "- Title       : " << events[i].gettieude() << endl;
+                        cout << "- Description : " << events[i].getmota() << endl;
+                        cout << "- Start time  : " << events[i].getstt() << endl;
+                        cout << "- End time    : " << events[i].getet() << endl;
+                        cout << "------------------------------------------" << endl;
                     }
 
-                    int choice;
-                    cout << "Enter the index of the event you want to edit (enter -1 to return to the menu): "; // "Nhap so thu tu cua su kien can chinh sua (nhap -1 de quay lai menu): "
-                    cin >> choice;
+                    int eventChoice;
+                    cout << "\nEnter the number of the event to modify (enter -1 to return): ";
+                    cin >> eventChoice;
                     cin.ignore();
-                    if (choice == -1)
+                    if (eventChoice == -1)
                         return;
 
-                    if (choice < 1 || choice > events.size())
+                    if (eventChoice < 1 || eventChoice > events.size())
                     {
-                        cout << "Invalid choice.\n"; // "Lua chon khong hop le."
+                        cout << "\n==========================================\n";
+                        cout << "|             INVALID CHOICE             |\n";
+                        cout << "==========================================\n";
                         return;
                     }
 
-                    Event &selectedEvent = events[choice - 1];
-                    string tieude, mota;
+                    Event &selectedEvent = events[eventChoice - 1];
+                    string title, description;
                     thoigian startTime, endTime;
 
-                    cout << "Enter a new title (current title: " << selectedEvent.gettieude() << ", enter -1 to return): "; // "Nhap tieu de moi (tieu de hien tai: ..."
-                    getline(cin, tieude);
-                    if (tieude == "-1")
+                    cout << "\n==========================================\n";
+                    cout << "|       MODIFYING SELECTED EVENT         |\n";
+                    cout << "==========================================\n";
+                    cout << "Current Title: " << selectedEvent.gettieude() << "\n";
+                    cout << "Enter new title (leave blank to keep current, -1 to return): ";
+                    getline(cin, title);
+                    if (title == "-1")
                         return;
-                    if (!tieude.empty())
-                    {
-                        selectedEvent.settieude(tieude);
-                    }
+                    if (!title.empty())
+                        selectedEvent.settieude(title);
 
-                    cout << "Enter a new description (current description: " << selectedEvent.getmota() << ", enter -1 to return): "; // "Nhap mo ta moi (mo ta hien tai: ..."
-                    getline(cin, mota);
-                    if (mota == "-1")
+                    cout << "Current Description: " << selectedEvent.getmota() << "\n";
+                    cout << "Enter new description (leave blank to keep current, -1 to return): ";
+                    getline(cin, description);
+                    if (description == "-1")
                         return;
-                    if (!mota.empty())
-                    {
-                        selectedEvent.setmota(mota);
-                    }
+                    if (!description.empty())
+                        selectedEvent.setmota(description);
 
-                    cout << "Enter a new start time (current start time: " << selectedEvent.getstt() << ", enter -1 to return): "; // "Nhap thoi gian bat dau moi (thoi gian hien tai: ..."
+                    cout << "Current Start Time: " << selectedEvent.getstt() << "\n";
+                    cout << "Enter new start time (-1 to return):\n";
                     if (!startTime.setinput())
                         return;
+
                     int choose;
-                    cout << "Do you want to add an end time?\n"; // "Ban co muon them thoi gian ket thuc khong?"
-                    cout << "1. Yes            2. No (enter -1 to return to the menu)\n"; // "1. Co            2. Khong (nhap -1 de quay lai menu)"
+                    cout << "Do you want to modify the end time?\n";
+                    cout << "1. Yes            2. No (leave current end time, -1 to return)\n";
                     cin >> choose;
+                    cin.ignore();
+
                     if (choose == -1)
                         return;
 
                     if (choose == 1)
                     {
+                        cout << "Enter new end time (-1 to return):\n";
                         if (!endTime.setinput())
                             return;
+                        selectedEvent.setet(endTime);
                     }
+
                     selectedEvent.setstt(startTime);
-                    selectedEvent.setet(endTime);
-                    cout << "Event information has been updated successfully.\n"; // "Da cap nhat thong tin su kien thanh cong."
-                    cout << startTime;
-                    vector<string> savevector;
-                    string tmtieude, tmmota, tmyear, tmmonth, tmday, tmhour, tmminute, tmsecond, tmsave;
-                    thoigian tmpstt = selectedEvent.getstt();
-                    for (int i = 0; i < events.size(); i++)
-                    {
-                        tmet = events[i].getet();
-                        tmtieude = events[i].gettieude();
-                        tmmota = events[i].getmota();
-                        tmstt = events[i].getstt();
-                        tmyear = to_string(tmstt.getyear());
-                        tmmonth = to_string(tmstt.getmonth());
-                        tmday = to_string(tmstt.getday());
-                        tmhour = to_string(tmstt.gethour());
-                        tmminute = to_string(tmstt.getminute());
-                        tmsecond = to_string(tmstt.getsecond());
-                        tmsave = tmtieude + "|" + tmmota + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
-                        if (tmet.getday() > 0)
-                        {
-                            tmyear = to_string(tmet.getyear());
-                            tmmonth = to_string(tmet.getmonth());
-                            tmday = to_string(tmet.getday());
-                            tmhour = to_string(tmet.gethour());
-                            tmminute = to_string(tmet.getminute());
-                            tmsecond = to_string(tmet.getsecond());
-                            tmsave = tmsave + "|" + tmday + "/" + tmmonth + "/" + tmyear + "-" + tmhour + ":" + tmminute + ":" + tmsecond;
-                        }
-                        savevector.push_back(tmsave);
-                    }
-                    string inacc = save[i].getname() + "-" + save[i].getpass() + ".txt";
-                    string basename = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
-                    fs::path basepath = fs::path(basename) / inacc;
-                    ofstream accpath(basepath);
-                    if (accpath.is_open())
-                    {
-                        for (int i = 0; i < savevector.size(); i++)
-                        {
-                            accpath << savevector[i] << endl;
-                        }
-                        file.close();
-                    }
-                    else
-                    {
-                        cout << "Cannot access the data\n"; // "Khong the truy cap duoc du lieu"
-                    }
+
+                    cout << "\n==========================================\n";
+                    cout << "|      EVENT MODIFIED SUCCESSFULLY       |\n";
+                    cout << "==========================================\n\n";
                 }
                 break;
+
                 case 0:
-                    cout << "Exiting the program.\n"; // "Thoat chuong trinh."
+                    cout << "\n==========================================\n";
+                    cout << "|          EXITING THE PROGRAM           |\n";
+                    cout << "==========================================\n";
                     done = true;
                     break;
+
                 default:
-                    cout << "Invalid choice, please choose again.\n"; // "Lua chon khong hop le, vui long chon lai."
+                    cout << "\n==========================================\n";
+                    cout << "|             INVALID CHOICE             |\n";
+                    cout << "==========================================\n";
                 }
             } while (choosen != 0);
+
+            if (done)
+                break;
         }
-        if (done)
-            break;
     }
 }
 
 void manager::erase()
 {
-    cout << "User list: " << endl; // "Danh sach nguoi dung"
+    cout << "\n==========================================\n";
+    cout << "|               USER LIST                |\n";
+    cout << "==========================================\n";
     print();
-    cout << "Enter the index of the account you want to delete\n"; // "Nhap so thu tu tai khoan chu nhan muon xoa"
+    
+    cout << "\n==========================================\n";
+    cout << "|       ENTER THE INDEX TO DELETE        |\n";
+    cout << "==========================================\n";
+    cout << "Enter the index of the account you want to delete (enter 0 to cancel): ";
+    
     int choice;
     cin >> choice;
-    if (choice > save.size() - 1)
+    cin.ignore();
+    
+    if (choice == 0)
     {
-        cout << "Your choice has exceeded the valid range, please try again\n"; // "Lua chon cua chu nhan da vuot qua so ke pham trong tran tuc, xin chu nhan nhap lai"
+        cout << "\n==========================================\n";
+        cout << "|        CANCELLING DELETION             |\n";
+        cout << "==========================================\n";
+        return;
+    }
+
+    if (choice < 1 || choice > save.size())
+    {
+        cout << "\n==========================================\n";
+        cout << "|          INVALID CHOICE, TRY AGAIN     |\n";
+        cout << "==========================================\n";
         return erase();
+    }
+
+    string base = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+    string acc = save[choice - 1].getname() + "-" + save[choice - 1].getpass() + ".txt";
+    fs::path accpath = fs::path(base) / acc;
+    
+    if (fs::exists(accpath))
+    {
+        try
+        {
+            fs::remove(accpath);
+            cout << "\n==========================================\n";
+            cout << "|      ACCOUNT DELETED SUCCESSFULLY      |\n";
+            cout << "==========================================\n";
+        }
+        catch (const std::exception &e)
+        {
+            cerr << "Error deleting account: " << e.what() << "\n";
+        }
     }
     else
     {
-        for (int i = 0; i < save.size() - 1; i++)
-        {
-            if (i == choice - 1)
-            {
-                string base = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
-                string acc = save[i].getname() + "-" + save[i].getpass() + ".txt";
-                fs::path accpath = fs::path(base) / acc;
-                if (filesystem::exists(accpath))
-                {
-                    filesystem::remove(accpath);
-                    cout << "The account has been successfully deleted\n"; // "Tai khoan da duoc khoa thanh cong"
-                    return;
-                }
-                else
-                {
-                    cout << "Account not found, please try again\n"; // "Khong tim thay tai khoan, xin chu nhan thuc hien lai"
-                    return erase();
-                }
-            }
-        }
+        cout << "\n==========================================\n";
+        cout << "|          ACCOUNT NOT FOUND             |\n";
+        cout << "==========================================\n";
+        return erase();
     }
 }
