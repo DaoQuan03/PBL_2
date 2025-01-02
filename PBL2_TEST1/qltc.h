@@ -7,7 +7,6 @@ class qluser
 {
 private:
     user use;
-
 public:
     string filename;
     int managercheck;

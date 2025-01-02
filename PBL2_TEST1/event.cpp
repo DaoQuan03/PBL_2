@@ -53,22 +53,26 @@ void Event::setet(const thoigian tmet)
 
 double Event::calltime()
 {
-    tm cal={};
-    cal.tm_mday=startTime.getday();
-    cal.tm_mon=startTime.getmonth()-1;
-    cal.tm_year=startTime.getyear()-1970;
-    cal.tm_hour=startTime.gethour();
-    cal.tm_min=startTime.getminute();
-    cal.tm_sec=startTime.getsecond();
+    std::tm target_tm = {};
+    target_tm.tm_year = startTime.getyear() - 1900; // tm_year tính từ năm 1900
+    target_tm.tm_mon = startTime.getmonth() - 1;    // tm_mon từ 0 đến 11
+    target_tm.tm_mday = startTime.getday();
+    target_tm.tm_hour = startTime.gethour();
+    target_tm.tm_min = startTime.getsecond();
+    target_tm.tm_sec = startTime.getsecond();
 
-    // Lấy thời gian hiện tại
-    auto now = chrono::system_clock::now();
-    time_t nowTime = chrono::system_clock::to_time_t(now);
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    std::tm *now_tm = std::localtime(&now_time);
 
-    // Chuyển đổi thời gian nhập và thời gian hiện tại thành std::time_t
-    time_t callTimeT = mktime(&cal);       //La mot ham trong thu vien c_time dung de chuyen doi 1 struct_tm sang kieu time_t(la so giay ke tu 1/1/1970)
+    // Chuyển đổi thời gian mục tiêu thành time_t
+    std::time_t target_time = std::mktime(&target_tm);
 
-    // Tính khoảng thời gian chênh lệch
-    double difference = difftime(callTimeT, nowTime);      //difftime():dung de tinh toan so giay giua hai thoi diem
-    return difference;
+    // Tính khoảng thời gian
+    auto target = std::chrono::system_clock::from_time_t(target_time);
+    auto duration = target - now;
+
+    // Chuyển đổi khoảng thời gian thành giây
+    auto seconds = std::chrono::duration<double>(duration).count();
+    return seconds;
 }

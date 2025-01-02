@@ -3,7 +3,8 @@
 #include <iostream>
 using namespace std;
 
-void clearScreen() {
+void clearScreen()
+{
 #ifdef _WIN32
     system("cls"); // Clear screen for Windows
 #else
@@ -11,9 +12,11 @@ void clearScreen() {
 #endif
 }
 
-void displayMenu(qltt &use) {
+void displayMenu(base_qltt *use)
+{
     int choice;
-    do {
+    do
+    {
         clearScreen(); // Clean terminal screen before displaying menu again
 
         cout << "=========================================" << endl;
@@ -31,40 +34,43 @@ void displayMenu(qltt &use) {
         cin >> choice;
         cin.ignore();
 
-        switch (choice) {
-            case 1:
-                use.add();
-                break;
-            case 2:
-                use.fix();
-                break;
-            case 3:
-                use.erase();
-                break;
-            case 4:
-                use.print();
-                break;
-            case 5:
-                use.countdown();
-                break;
-            case 6:
-                use.writedata();
-                break;
-            case 0:
-                cout << "Exiting...\n";
-                return;
-            default:
-                cout << "Invalid choice!\n";
+        switch (choice)
+        {
+        case 1:
+            use->add();
+            break;
+        case 2:
+            use->fix();
+            break;
+        case 3:
+            use->erase();
+            break;
+        case 4:
+            use->print();
+            break;
+        case 5:
+            use->countdown();
+            break;
+        case 6:
+            use->writedata();
+            break;
+        case 0:
+            cout << "Exiting...\n";
+            return;
+        default:
+            cout << "Invalid choice!\n";
         }
-        
+
         cout << "Press any key to return to the menu...";
         cin.ignore();
     } while (true);
 }
 
-void displayformanager(manager &master) {
+void displayformanager(base_qltt *master)
+{
     int choice;
-    do {
+    do
+    {
         clearScreen(); // Clean terminal screen before displaying menu again
 
         cout << "=========================================" << endl;
@@ -80,24 +86,25 @@ void displayformanager(manager &master) {
         cin >> choice;
         cin.ignore();
 
-        switch (choice) {
-            case 1:
-                master.print();
-                break;
-            case 2:
-                master.add();
-                break;
-            case 3:
-                master.erase();
-                break;
-            case 4:
-                master.fix();
-                break;
-            case 0:
-                cout << "Exiting...\n";
-                return;
-            default:
-                cout << "Invalid choice!\n";
+        switch (choice)
+        {
+        case 1:
+            master->print();
+            break;
+        case 2:
+            master->add();
+            break;
+        case 3:
+            master->erase();
+            break;
+        case 4:
+            master->fix();
+            break;
+        case 0:
+            cout << "Exiting...\n";
+            return;
+        default:
+            cout << "Invalid choice!\n";
         }
 
         cout << "Press any key to return to the menu...";
@@ -105,11 +112,12 @@ void displayformanager(manager &master) {
     } while (true);
 }
 
-int main() {
-    qltt use;
-    manager master;
+int main()
+{
+    base_qltt *user = nullptr;
     int choice;
-    do {
+    do
+    {
         clearScreen(); // Clean terminal screen before displaying main menu again
 
         cout << "=========================================" << endl;
@@ -124,31 +132,43 @@ int main() {
         cout << "Enter your choice: ";
         cin >> choice;
 
-        switch (choice) {
-            case 1:
-                use.checkdata();
-                if (use.rightmanager) {
-                    displayformanager(master);
-                    return 0;
-                } else {
-                    use.credata();
-                    displayMenu(use);
-                }
-                break;
-            case 2:
-                use.creacc();
-                if (use.rightmanager) {
-                    displayformanager(master);
-                    return 0;
-                } else {
-                    displayMenu(use);
-                }
-                break;
-            case 3:
-                cout << "See you again!\n";
+        switch (choice)
+        {
+        case 1:
+            user = new qltt;
+            user->input();
+            if (user->checkdata())
+            {
+                user = nullptr;
+                user = new manager;
+                displayformanager(user);
                 return 0;
-            default:
-                cout << "Invalid choice.\n";
+            }
+            else
+            {
+                displayMenu(user);
+            }
+            break;
+        case 2:
+            user = new qltt;
+            user->input();
+            if (user->creacc())
+            {
+                user = nullptr;
+                user = new manager;
+                displayformanager(user);
+                return 0;
+            }
+            else
+            {
+                displayMenu(user);
+            }
+            break;
+        case 3:
+            cout << "See you again!\n";
+            return 0;
+        default:
+            cout << "Invalid choice.\n";
         }
 
         cout << "Press any key to return to the main menu...";

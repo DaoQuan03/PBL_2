@@ -16,7 +16,6 @@ class thoigian
 {
 public:
     int year, month, day, hour, minute, second;
-    string tmtime;
 
     thoigian(int=0, int=0, int=0, int=0, int=0, int=0);
     bool setinput();

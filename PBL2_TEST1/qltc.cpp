@@ -30,7 +30,7 @@ void qluser::check()
     cout << "==========================================\n";
     cout << "Checking for file: " << filename << endl;
     
-    string folderPath = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    string folderPath = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
     bool found = false;
 
     try
@@ -85,7 +85,7 @@ void qluser::check()
 void qluser::create()
 {
     filename = use.getname() + "-" + use.getpass() + ".txt";
-    string folder = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    string folder = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
 
     if (!fs::exists(folder))
     {

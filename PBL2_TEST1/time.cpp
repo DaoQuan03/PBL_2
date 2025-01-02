@@ -10,7 +10,7 @@ istream &operator>>(istream &is, thoigian &t)
 
 ostream &operator<<(ostream &os, const thoigian &t)
 {
-    return os << "Luc " << t.hour << "h" << t.minute << "p" << t.second << "s" << " vao ngay " << t.day << "/" << t.month << "/" << t.year;
+    return os << "At " << t.hour << "h" << t.minute << "m" << t.second << "s" << " on " << t.day << "/" << t.month << "/" << t.year;
 }
 
 bool thoigian::operator==(const thoigian &dt1)
@@ -41,17 +41,17 @@ bool thoigian::isLeapYear(int year)
 bool thoigian::setinput()
 {
     int tmday, tmmonth, tmyear, tmhour, tmminute, tmsecond;
-    cout << "Nhap ngay: ";
+    cout << "Enter day: ";
     cin >> tmday;
-    cout << "Nhap thang: ";
+    cout << "Enter month: ";
     cin >> tmmonth;
-    cout << "Nhap nam: ";
+    cout << "Enter year: ";
     cin >> tmyear;
-    cout << "Nhap gio: ";
+    cout << "Enter hour: ";
     cin >> tmhour;
-    cout << "Nhap phut: ";
+    cout << "Enter minute: ";
     cin >> tmminute;
-    cout << "Nhap giay: ";
+    cout << "Enter second: ";
     cin >> tmsecond;
 
     setday(tmday);
@@ -64,32 +64,32 @@ bool thoigian::setinput()
     int daysInMonth[] = {0, 31, 28 + isLeapYear(year), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (this->day < 1 || this->day > daysInMonth[month])
     {
-        cout << "Ngay khong hop le cho thang " << month << ", vui long nhap lai ngay: ";
+        cout << "The day is not valid for the month " << month << ", please enter the day again: ";
         cin >> this->day;
         cin.ignore();
     }
     if (this->month < 1 || this->month > 12)
     {
-        cout << "Ban da nhap sai quy dinh cua thang(1-12), vui long nhap lai thang: ";
+        cout << "You entered an incorrect month (1-12), please enter the month again: ";
         cin >> this->month;
         cin.ignore();
     }
 
     if (this->hour < 0 || this->hour > 23)
     {
-        cout << "Ban da nhap sai quy dinh cua gio(0-23), vui long nhap lai gio: ";
+        cout << "You entered an incorrect hour (0-23), please enter the hour again: ";
         cin >> this->hour;
         cin.ignore();
     }
     if (this->minute < 0 || this->minute > 60)
     {
-        cout << "Ban da nhap sai quy dinh cua phut(0-60), vui long nhap lai phut: ";
+        cout << "You entered an incorrect minute (0-60), please enter the minute again: ";
         cin >> this->minute;
         cin.ignore();
     }
     if (this->second < 0 || this->second > 60)
     {
-        cout << "Ban da nhap sai quy dinh cua giay(0-60), vui long nhap lai giay: ";
+        cout << "You entered an incorrect second (0-60), please enter the second again: ";
         cin >> this->second;
         cin.ignore();
     }
@@ -164,22 +164,22 @@ void thoigian::setsecond(int second)
     this->second = second;
 }
 
-int thoigian::getyear()
+int thoigian::getyear() 
 {
     return this->year;
 }
 
-int thoigian::getmonth()
+int thoigian::getmonth() 
 {
     return this->month;
 }
 
-int thoigian::getday()
+int thoigian::getday() 
 {
     return this->day;
 }
 
-int thoigian::gethour()
+int thoigian::gethour() 
 {
     return this->hour;
 }
@@ -243,7 +243,7 @@ void thoigian::checktime()
             }
         }
     }
-    cout << "Thoi gian ban nhap som hon thoi gian hien tai, vui long nhap lai\n";
+    cout << "The time you entered is earlier than the current time, please enter the time again\n";
     setinput();
     return checktime();
 }

@@ -1,15 +1,18 @@
 #include "qltt.h"
 #include <iostream>
 
-void qltt::creacc()
+void qltt::input()
 {
-    rightmanager = 0;
     access.inputuser();
     access.checkmanager();
+}
+
+bool qltt::creacc()
+{
+
     if (access.managercheck)
     {
-        rightmanager = 1;
-        return;
+        return 1;
     }
     else
     {
@@ -17,19 +20,15 @@ void qltt::creacc()
         if (access.recheck != 1)
             return creacc();
         else
-            return;
+            return 0;
     }
 }
 
-void qltt::checkdata()
+bool qltt::checkdata()
 {
-    rightmanager = 0;
-    access.inputuser();
-    access.checkmanager();
     if (access.managercheck)
     {
-        rightmanager = 1;
-        return;
+        return 1;
     }
     else
     {
@@ -37,7 +36,8 @@ void qltt::checkdata()
         if (access.recheck != 1)
             return checkdata();
         else
-            return;
+            credata();
+        return 0;
     }
 }
 
@@ -63,7 +63,7 @@ void qltt::credata()
     {
         thoigian tmstt, tmet;
         string input = access.filename;
-        string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+        string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
         fs::path filepath = fs::path(foldername) / input;
         ifstream file(filepath);
         if (!file)
@@ -72,14 +72,14 @@ void qltt::credata()
             return;
         }
         char check;
-        file.get(check);    // Get the first character to check if user event data exists in the file
-        if (file.eof())     // Check if the pointer has reached the end
+        file.get(check); // Get the first character to check if user event data exists in the file
+        if (file.eof())  // Check if the pointer has reached the end
         {
             cout << "You have not created event information\n";
         }
         else
         {
-            file.unget();    // If there is data, return the first character fetched earlier
+            file.unget(); // If there is data, return the first character fetched earlier
             string line, tmtieude, tmmota;
             string tmsave;
             while (getline(file, line))
@@ -99,7 +99,7 @@ void qltt::credata()
                 tmstt.hour = safeStoi(tmsave);
                 getline(ss, tmsave, ':');
                 tmstt.minute = safeStoi(tmsave);
-                getline(ss, tmsave,'|');
+                getline(ss, tmsave, '|');
                 tmstt.second = safeStoi(tmsave);
 
                 // Check if there are no more characters after assigning tmstt.second
@@ -130,6 +130,8 @@ void qltt::credata()
             file.close();
         }
     }
+    heapsort sort;
+    sort.heapsorT(events);
 }
 
 void qltt::writedata()
@@ -170,7 +172,7 @@ void qltt::writedata()
     }
 
     string input = access.filename;
-    string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST1\\DATABASE";
+    string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
     fs::path filepath = fs::path(foldername) / input;
 
     ofstream file(filepath);
@@ -195,7 +197,6 @@ void qltt::writedata()
     }
 }
 
-
 void qltt::print()
 {
     if (events.empty())
@@ -205,9 +206,6 @@ void qltt::print()
         cout << "==========================================\n\n";
         return;
     }
-
-    heapsort sort;
-    sort.heapsorT(events);
 
     cout << "\n==========================================\n";
     cout << "|                EVENT LIST              |\n";
@@ -220,7 +218,7 @@ void qltt::print()
         cout << "| Title       : " << events[i].gettieude() << "\n";
         cout << "| Description : " << events[i].getmota() << "\n";
         cout << "| Start Time  : " << events[i].getstt() << "\n";
-        
+
         // Display End Time if available
         if (events[i].getet().getday() > 0)
         {
@@ -230,11 +228,10 @@ void qltt::print()
         {
             cout << "| End Time    : Not specified\n";
         }
-        
+
         cout << "------------------------------------------\n";
     }
 }
-
 
 void qltt::add()
 {
@@ -245,18 +242,22 @@ void qltt::add()
     cout << "\n==========================================\n";
     cout << "|              ADD NEW EVENT             |\n";
     cout << "==========================================\n";
+    printcalenda();
 
     cout << "\nEnter the title of the event (enter '-1' to return to menu): ";
     getline(cin, tmtieude);
-    if (tmtieude == "-1") return;
+    if (tmtieude == "-1")
+        return;
 
     cout << "\nEnter the description of the event (enter '-1' to return to menu): ";
     getline(cin, tmmota);
-    if (tmmota == "-1") return;
+    if (tmmota == "-1")
+        return;
 
     cout << "\nEnter the start time of the event:\n";
-    if (!tmstartime.setinput()) return;
-
+    if (!tmstartime.setinput())
+        return;
+        
     cout << "\n==========================================\n";
     cout << "|              ADD END TIME?             |\n";
     cout << "==========================================\n";
@@ -265,11 +266,14 @@ void qltt::add()
     cin >> choice;
     cin.ignore();
 
-    if (choice == -1) return;
+    if (choice == -1)
+        return;
 
-    if (choice == 1) {
+    if (choice == 1)
+    {
         cout << "\nEnter the end time of the event:\n";
-        if (!tmendtime.setinput()) return;
+        if (!tmendtime.setinput())
+            return;
     }
 
     // Final confirmation
@@ -280,20 +284,24 @@ void qltt::add()
     cout << "Are you sure you want to add this event? (Y/N): ";
     cin >> confirm;
 
-    if (confirm == 'Y' || confirm == 'y') {
+    if (confirm == 'Y' || confirm == 'y')
+    {
         Event tmp(tmtieude, tmmota, tmstartime, tmendtime);
         events.push_back(tmp);
 
         cout << "\n==========================================\n";
         cout << "|       EVENT ADDED SUCCESSFULLY        |\n";
         cout << "==========================================\n\n";
-    } else {
+    }
+    else
+    {
         cout << "\n==========================================\n";
         cout << "|         EVENT ADDITION CANCELED        |\n";
         cout << "==========================================\n\n";
     }
+    heapsort sort;
+    sort.heapsorT(events);
 }
-
 
 void qltt::erase()
 {
@@ -304,9 +312,6 @@ void qltt::erase()
         cout << "==========================================\n\n";
         return;
     }
-
-    heapsort sort;
-    sort.heapsorT(events);
 
     cout << "\n==========================================\n";
     cout << "|           SELECT EVENT TO DELETE       |\n";
@@ -364,7 +369,6 @@ void qltt::erase()
     }
 }
 
-
 void qltt::fix()
 {
     if (events.empty())
@@ -374,9 +378,6 @@ void qltt::fix()
         cout << "==========================================\n\n";
         return;
     }
-
-    heapsort sort;
-    sort.heapsorT(events);
 
     cout << "\n==========================================\n";
     cout << "|                EVENT LIST              |\n";
@@ -460,7 +461,6 @@ void qltt::fix()
     cout << "==========================================\n\n";
 }
 
-
 void qltt::countdown()
 {
     if (events.empty())
@@ -509,9 +509,72 @@ void qltt::countdown()
     cout << "==========================================\n";
     cout << "Event Title      : " << events[choice - 1].gettieude() << endl;
     cout << "Event Start Time : " << eventTime << endl;
-    cout << "Time Remaining   : " << timeRemaining.day << " days, " 
+    cout << "Time Remaining   : " << timeRemaining.day << " days, "
          << timeRemaining.hour << " hours, "
          << timeRemaining.minute << " minutes, "
          << timeRemaining.second << " seconds." << endl;
     cout << "==========================================\n\n";
+}
+
+void qltt::printcalenda()
+{
+    int year = 2025;
+    int stDay;
+    int day = 1;
+    int month = 1;
+    int y = year - (month < 3);
+    int m = month + (month < 3 ? 12 : 0);
+    int k = y % 100;
+    int j = y / 100;
+    stDay = (day + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 + 5 * j) % 7;
+
+    string months[] = {"January", "February", "March", "April", "May", "June",
+                       "July", "August", "September", "October", "November", "December"};
+
+    for (int month = 0; month < 12; ++month)
+    {
+        int daysInMonth;
+        switch (month + 1)
+        {
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            daysInMonth = 30;
+            break;
+        case 2:
+            daysInMonth = ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) ? 29 : 28;
+            break;
+        default:
+            daysInMonth = 31;
+        }
+
+        cout << "-----------------------------" << endl;
+        cout << " " << months[month] << " " << year << endl;
+        cout << "-----------------------------" << endl;
+        cout << " Sun Mon Tue Wed Thu Fri Sat " << endl;
+
+        int doweek;
+        for (doweek = 0; doweek < stDay; ++doweek)
+        {
+            cout << "    ";
+        }
+
+        for (int day = 1; day <= daysInMonth; ++day)
+        {
+            cout << setw(4) << day;
+            if (++doweek > 6)
+            {
+                cout << endl;
+                doweek = 0;
+            }
+        }
+
+        if (doweek != 0)
+        {
+            cout << endl;
+        }
+
+        stDay = doweek;
+    }
 }
