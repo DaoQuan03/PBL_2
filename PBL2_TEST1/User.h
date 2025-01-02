@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <fstream>
 #include <filesystem>
+#include <conio.h>
 
 namespace fs = std::filesystem;
 using namespace std;
@@ -22,6 +23,8 @@ public:
     string getname();
     string getpass();
     ~user();
+
+    void setpassword_secure();
 };
 
 #endif

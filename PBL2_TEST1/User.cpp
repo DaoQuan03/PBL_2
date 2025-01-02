@@ -27,3 +27,23 @@ string user::getpass()
 {
     return this->password;
 }
+
+void user::setpassword_secure()
+{
+    string pass;
+    char ch;
+    cout << "Enter password: ";
+    while ((ch = _getch()) != '\r') { // '\r' là phím Enter
+        if (ch == '\b') { // Xử lý phím Backspace
+            if (!pass.empty()) {
+                cout << "\b \b"; // Xóa ký tự cuối trên màn hình
+                pass.pop_back();
+            }
+        } else {
+            pass.push_back(ch);
+            cout << '*'; // Hiển thị dấu '*'
+        }
+    }
+    cout << endl;
+    this->password = pass;
+}

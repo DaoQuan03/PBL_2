@@ -6,20 +6,18 @@ qluser::~qluser() { }
 
 void qluser::inputuser()
 {
-    string name, password;
+    string name;
     cin.ignore();
-    
-    // Username input
+
     cout << "\n==========================================\n";
     cout << "|               USER LOGIN               |\n";
     cout << "==========================================\n";
     cout << "Enter username: ";
     getline(cin, name);
-    cout << "Enter password: ";
-    getline(cin, password);
-    
+
+    // Sử dụng phương thức nhập mật khẩu bảo mật
     use.setname(name);
-    use.setpassword(password);
+    use.setpassword_secure();
 }
 
 void qluser::check()
@@ -30,7 +28,7 @@ void qluser::check()
     cout << "==========================================\n";
     cout << "Checking for file: " << filename << endl;
     
-    string folderPath = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
+    string folderPath = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
     bool found = false;
 
     try
@@ -85,7 +83,7 @@ void qluser::check()
 void qluser::create()
 {
     filename = use.getname() + "-" + use.getpass() + ".txt";
-    string folder = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
+    string folder = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
 
     if (!fs::exists(folder))
     {
