@@ -1,24 +1,23 @@
 #include "qltc.h"
 
-qluser::qluser() { }
+qluser::qluser() {}
 
-qluser::~qluser() { }
+qluser::~qluser() {}
 
 void qluser::inputuser()
 {
     string name;
-    cin.ignore();
-
     cout << "\n==========================================\n";
     cout << "|               USER LOGIN               |\n";
     cout << "==========================================\n";
+    cin.ignore();
     cout << "Enter username: ";
     getline(cin, name);
-
-    // Sử dụng phương thức nhập mật khẩu bảo mật
     use.setname(name);
+    // Sử dụng phương thức nhập mật khẩu bảo mật
     use.setpassword_secure();
 }
+
 
 void qluser::check()
 {
@@ -27,9 +26,25 @@ void qluser::check()
     cout << "|            ACCOUNT CHECKING            |\n";
     cout << "==========================================\n";
     cout << "Checking for file: " << filename << endl;
-    
-    string folderPath = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+
+    string folderPath = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
     bool found = false;
+    ifstream file(folderPath + "\\" + filename);
+    if (file.is_open())
+    {
+        found = true;
+        file.close();
+    }
+
+    if (!found)
+    {
+        cout << "Account not found. Please check your username and password.\n";
+        recheck = 0;
+    }
+    else
+    {
+        recheck = 1;
+    }
 
     try
     {
@@ -83,7 +98,7 @@ void qluser::check()
 void qluser::create()
 {
     filename = use.getname() + "-" + use.getpass() + ".txt";
-    string folder = "C:\\Users\\Admin\\OneDrive - The University of Technology\\Visual Studio Code\\OOP_PBL2\\DATABASE";
+    string folder = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
 
     if (!fs::exists(folder))
     {
@@ -105,7 +120,7 @@ void qluser::create()
 
     fs::path filepath = fs::path(folder) / filename;
     ofstream newfile(filepath);
-    
+
     if (newfile.is_open())
     {
         cout << "\n==========================================\n";

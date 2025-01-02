@@ -136,7 +136,6 @@ int main()
         {
         case 1:
             user = new qltt;
-            user->input();
             if (user->checkdata())
             {
                 user = nullptr;
@@ -151,7 +150,6 @@ int main()
             break;
         case 2:
             user = new qltt;
-            user->input();
             if (user->creacc())
             {
                 user = nullptr;

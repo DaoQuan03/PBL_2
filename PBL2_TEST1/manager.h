@@ -8,7 +8,7 @@ class manager : public base_qltt
 {
 private:
     qluser acc; 
-    vector<user> save;  
+    vector<user*> save;  
 public:
     manager();      
     ~manager();       

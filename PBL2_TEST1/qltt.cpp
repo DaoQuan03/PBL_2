@@ -1,6 +1,19 @@
 #include "qltt.h"
 #include <iostream>
 
+qltt::qltt()
+{
+}
+
+qltt::~qltt()
+{
+    for (Event *ev : events)
+    {
+        delete ev;
+    }
+    events.clear();
+}
+
 void qltt::input()
 {
     access.inputuser();
@@ -9,7 +22,7 @@ void qltt::input()
 
 bool qltt::creacc()
 {
-
+    input();
     if (access.managercheck)
     {
         return 1;
@@ -26,20 +39,34 @@ bool qltt::creacc()
 
 bool qltt::checkdata()
 {
-    if (access.managercheck)
+    input();
+    if (access.managercheck) 
     {
-        return 1;
+        return true;
     }
-    else
+
+    bool done = false;
+    while (!done)
     {
-        access.check();
-        if (access.recheck != 1)
-            return checkdata();
+        access.check(); 
+        if (access.recheck == 1) 
+        {
+            done = true; 
+        }
         else
-            credata();
-        return 0;
+        {
+            input(); 
+        }
+
+        if (access.managercheck)
+        {
+            return true;
+        }
     }
+    return true; 
 }
+
+
 
 bool qltt::isValidNumber(const string &s) // Check if the input string is a valid number or empty
 {
@@ -124,7 +151,7 @@ void qltt::credata()
                     }
                 }
 
-                Event tmp(tmtieude, tmmota, tmstt, tmet);
+                Event *tmp = new Event(tmtieude, tmmota, tmstt, tmet);
                 events.push_back(tmp);
             }
             file.close();
@@ -146,10 +173,10 @@ void qltt::writedata()
 
     for (int i = 0; i < events.size(); i++)
     {
-        tmet = events[i].getet();
-        tmtieude = events[i].gettieude();
-        tmmota = events[i].getmota();
-        tmstt = events[i].getstt();
+        tmet = events[i]->getet();
+        tmtieude = events[i]->gettieude();
+        tmmota = events[i]->getmota();
+        tmstt = events[i]->getstt();
         tmyear = to_string(tmstt.getyear());
         tmmonth = to_string(tmstt.getmonth());
         tmday = to_string(tmstt.getday());
@@ -215,14 +242,14 @@ void qltt::print()
     {
         cout << "Event " << i + 1 << ":\n";
         cout << "------------------------------------------\n";
-        cout << "| Title       : " << events[i].gettieude() << "\n";
-        cout << "| Description : " << events[i].getmota() << "\n";
-        cout << "| Start Time  : " << events[i].getstt() << "\n";
+        cout << "| Title       : " << events[i]->gettieude() << "\n";
+        cout << "| Description : " << events[i]->getmota() << "\n";
+        cout << "| Start Time  : " << events[i]->getstt() << "\n";
 
         // Display End Time if available
-        if (events[i].getet().getday() > 0)
+        if (events[i]->getet().getday() > 0)
         {
-            cout << "| End Time    : " << events[i].getet() << "\n";
+            cout << "| End Time    : " << events[i]->getet() << "\n";
         }
         else
         {
@@ -257,7 +284,7 @@ void qltt::add()
     cout << "\nEnter the start time of the event:\n";
     if (!tmstartime.setinput())
         return;
-        
+
     cout << "\n==========================================\n";
     cout << "|              ADD END TIME?             |\n";
     cout << "==========================================\n";
@@ -286,7 +313,7 @@ void qltt::add()
 
     if (confirm == 'Y' || confirm == 'y')
     {
-        Event tmp(tmtieude, tmmota, tmstartime, tmendtime);
+        Event *tmp = new Event(tmtieude, tmmota, tmstartime, tmendtime);
         events.push_back(tmp);
 
         cout << "\n==========================================\n";
@@ -320,10 +347,10 @@ void qltt::erase()
     for (int i = 0; i < events.size(); ++i)
     {
         cout << i + 1 << ". " << endl;
-        cout << "- Title       : " << events[i].gettieude() << endl;
-        cout << "- Description : " << events[i].getmota() << endl;
-        cout << "- Start time  : " << events[i].getstt() << endl;
-        cout << "- End time    : " << events[i].getet() << endl;
+        cout << "- Title       : " << events[i]->gettieude() << endl;
+        cout << "- Description : " << events[i]->getmota() << endl;
+        cout << "- Start time  : " << events[i]->getstt() << endl;
+        cout << "- End time    : " << events[i]->getet() << endl;
         cout << "------------------------------------------" << endl;
     }
 
@@ -344,10 +371,10 @@ void qltt::erase()
 
     cout << "\n==========================================\n";
     cout << "|   CONFIRM DELETE EVENT:                |\n";
-    cout << "| - Title       : " << events[index - 1].gettieude() << endl;
-    cout << "| - Description : " << events[index - 1].getmota() << endl;
-    cout << "| - Start time  : " << events[index - 1].getstt() << endl;
-    cout << "| - End time    : " << events[index - 1].getet() << endl;
+    cout << "| - Title       : " << events[index - 1]->gettieude() << endl;
+    cout << "| - Description : " << events[index - 1]->getmota() << endl;
+    cout << "| - Start time  : " << events[index - 1]->getstt() << endl;
+    cout << "| - End time    : " << events[index - 1]->getet() << endl;
     cout << "==========================================\n";
 
     char confirm;
@@ -386,10 +413,10 @@ void qltt::fix()
     for (int i = 0; i < events.size(); ++i)
     {
         cout << i + 1 << ". " << endl;
-        cout << "- Title       : " << events[i].gettieude() << endl;
-        cout << "- Description : " << events[i].getmota() << endl;
-        cout << "- Start time  : " << events[i].getstt() << endl;
-        cout << "- End time    : " << events[i].getet() << endl;
+        cout << "- Title       : " << events[i]->gettieude() << endl;
+        cout << "- Description : " << events[i]->getmota() << endl;
+        cout << "- Start time  : " << events[i]->getstt() << endl;
+        cout << "- End time    : " << events[i]->getet() << endl;
         cout << "------------------------------------------" << endl;
     }
 
@@ -409,30 +436,30 @@ void qltt::fix()
         return;
     }
 
-    Event &selectedEvent = events[choice - 1];
+    Event *selectedEvent = events[choice - 1];
     string title, description;
     thoigian startTime, endTime;
 
     cout << "\n==========================================\n";
     cout << "|       MODIFYING SELECTED EVENT         |\n";
     cout << "==========================================\n";
-    cout << "Current Title: " << selectedEvent.gettieude() << "\n";
+    cout << "Current Title: " << selectedEvent->gettieude() << "\n";
     cout << "Enter new title (leave blank to keep current, -1 to return): ";
     getline(cin, title);
     if (title == "-1")
         return;
     if (!title.empty())
-        selectedEvent.settieude(title);
+        selectedEvent->settieude(title);
 
-    cout << "Current Description: " << selectedEvent.getmota() << "\n";
+    cout << "Current Description: " << selectedEvent->getmota() << "\n";
     cout << "Enter new description (leave blank to keep current, -1 to return): ";
     getline(cin, description);
     if (description == "-1")
         return;
     if (!description.empty())
-        selectedEvent.setmota(description);
+        selectedEvent->setmota(description);
 
-    cout << "Current Start Time: " << selectedEvent.getstt() << "\n";
+    cout << "Current Start Time: " << selectedEvent->getstt() << "\n";
     cout << "Enter new start time (-1 to return):\n";
     if (!startTime.setinput())
         return;
@@ -451,10 +478,10 @@ void qltt::fix()
         cout << "Enter new end time (-1 to return):\n";
         if (!endTime.setinput())
             return;
-        selectedEvent.setet(endTime);
+        selectedEvent->setet(endTime);
     }
 
-    selectedEvent.setstt(startTime);
+    selectedEvent->setstt(startTime);
 
     cout << "\n==========================================\n";
     cout << "|      EVENT MODIFIED SUCCESSFULLY       |\n";
@@ -481,9 +508,9 @@ void qltt::countdown()
     for (int i = 0; i < events.size(); ++i)
     {
         cout << i + 1 << ". " << endl;
-        cout << "- Title       : " << events[i].gettieude() << endl;
-        cout << "- Description : " << events[i].getmota() << endl;
-        cout << "- Start time  : " << events[i].getstt() << endl;
+        cout << "- Title       : " << events[i]->gettieude() << endl;
+        cout << "- Description : " << events[i]->getmota() << endl;
+        cout << "- Start time  : " << events[i]->getstt() << endl;
         cout << "------------------------------------------" << endl;
     }
 
@@ -501,13 +528,13 @@ void qltt::countdown()
     }
 
     thoigian currentTime = thoigian::getCurrentTime();
-    thoigian eventTime = events[choice - 1].getstt();
+    thoigian eventTime = events[choice - 1]->getstt();
     thoigian timeRemaining = currentTime.timeUntil(eventTime);
 
     cout << "\n==========================================\n";
     cout << "|        COUNTDOWN TO SELECTED EVENT     |\n";
     cout << "==========================================\n";
-    cout << "Event Title      : " << events[choice - 1].gettieude() << endl;
+    cout << "Event Title      : " << events[choice - 1]->gettieude() << endl;
     cout << "Event Start Time : " << eventTime << endl;
     cout << "Time Remaining   : " << timeRemaining.day << " days, "
          << timeRemaining.hour << " hours, "

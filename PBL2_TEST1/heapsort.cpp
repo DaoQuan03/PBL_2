@@ -1,22 +1,22 @@
 #include "heapsort.h"
 
-void heapsort::swap(Event &a, Event &b)
+void heapsort::swap(Event *a, Event *b)
 {
-    Event tmp = a;
+    Event *tmp = a;
     a = b;
     b = tmp;
 }
 
-void heapsort::heapify(vector<Event> &eve, int n, int i)
+void heapsort::heapify(vector<Event*> eve, int n, int i)
 {
     int largest = i;
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
-    if (left < n && eve[left].calltime() > eve[largest].calltime())
+    if (left < n && eve[left]->calltime() > eve[largest]->calltime())
         largest = left;
 
-    if (right < n && eve[right].calltime() > eve[largest].calltime())
+    if (right < n && eve[right]->calltime() > eve[largest]->calltime())
         largest = right;
 
     if (largest != i)
@@ -26,7 +26,7 @@ void heapsort::heapify(vector<Event> &eve, int n, int i)
     }
 }
 
-void heapsort::heapsorT(vector<Event> &ev)
+void heapsort::heapsorT(vector<Event*> ev)
 {
     int n = ev.size();
 

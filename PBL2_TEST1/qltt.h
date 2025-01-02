@@ -11,10 +11,13 @@ using namespace std;
 class qltt : public base_qltt
 {
 private:
-    vector<Event> events;
+    vector<Event*> events;
     qluser access;
 
 public:
+    qltt();
+    ~qltt();
+    
     void print() override;
     void add() override;
     void erase() override;

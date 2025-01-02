@@ -6,9 +6,9 @@
 class heapsort
 {
 public:
-    void swap(Event &, Event &);
-    void heapify(vector<Event>&, int , int );
-    void heapsorT(vector<Event> &);
+    void swap(Event *, Event *);
+    void heapify(vector<Event*>, int , int );
+    void heapsorT(vector<Event*>);
 };
 
 #endif // HEAPSORT_H

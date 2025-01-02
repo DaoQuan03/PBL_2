@@ -65,7 +65,7 @@ double Event::calltime()
     std::time_t now_time = std::chrono::system_clock::to_time_t(now);
     std::tm *now_tm = std::localtime(&now_time);
 
-    // Chuyển đổi thời gian mục tiêu thành time_t
+    // Chuyển đổi thời gian thành time_t
     std::time_t target_time = std::mktime(&target_tm);
 
     // Tính khoảng thời gian

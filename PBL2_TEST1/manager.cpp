@@ -6,48 +6,48 @@ manager::manager()
 
 manager::~manager()
 {
+    for (user *use : save)
+    {
+        delete use;
+    }
+    save.clear();
 }
 
 void manager::print()
 {
     string basedata = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
-    
+    save.clear();
     // Đầu ra bắt đầu
     cout << "\n==========================================\n";
     cout << "|           USER LIST - MANAGER          |\n";
     cout << "==========================================\n";
-
     try
     {
         if (fs::exists(basedata) && fs::is_directory(basedata))
         {
             int i = 0;
-            user use;
             string tmp, tmname, tmpass;
-            
-            // Lặp qua thư mục để hiển thị danh sách người dùng
+
             for (const auto &it : fs::directory_iterator(basedata))
             {
                 cout << "\nUser " << i + 1 << ":\n";
                 cout << "------------------------------------------\n";
-                
+
                 cout << "- Filename   : " << it.path().filename().string() << endl;
-                
+
                 tmp = it.path().filename().string();
                 stringstream ss(tmp);
                 getline(ss, tmname, '-');
-                use.setname(tmname);
                 getline(ss, tmpass, '.');
-                use.setpassword(tmpass);
-                save.push_back(use);
 
-                cout << "- Username   : " << use.getname() << endl;
-                cout << "- Password   : " << use.getpass() << endl;
+                user *use = new user(tmname, tmpass);  
+                save.push_back(use);  
+
+                cout << "- Username   : " << use->getname() << endl;
+                cout << "- Password   : " << use->getpass() << endl;
                 cout << "------------------------------------------\n";
                 i++;
             }
-
-            // Nếu không tìm thấy người dùng
             if (i == 0)
             {
                 cout << "\n==========================================\n";
@@ -74,7 +74,7 @@ void manager::print()
 
 void manager::add()
 {
-    user ustmp;
+    user *ustmp = new user;
     string tmpname, tmppass;
     cin.ignore();
 
@@ -89,13 +89,13 @@ void manager::add()
     cout << "Enter the owner's password: ";
     getline(cin, tmppass);
 
-    ustmp.setname(tmpname);
-    ustmp.setpassword(tmppass);
+    ustmp->setname(tmpname);
+    ustmp->setpassword(tmppass);
     save.push_back(ustmp);
 
     // Kiểm tra và tạo thư mục cơ sở dữ liệu
     string base = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
-    string accname = ustmp.getname() + "-" + ustmp.getpass() + ".txt";
+    string accname = ustmp->getname() + "-" + ustmp->getpass() + ".txt";
 
     if (!fs::exists(base))
     {
@@ -195,7 +195,7 @@ void manager::add()
         }
 
         // Lưu thông tin vào tệp dữ liệu của tài khoản
-        string inputmp = ustmp.getname() + "-" + ustmp.getpass() + ".txt";
+        string inputmp = ustmp->getname() + "-" + ustmp->getpass() + ".txt";
         string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
         fs::path filepath = fs::path(foldername) / inputmp;
         ofstream file(filepath);
@@ -222,9 +222,9 @@ void manager::add()
         return;
     }
 }
-bool manager::creacc(){return 1;}
-bool manager::checkdata(){return 1;}
-void manager::input(){}
+bool manager::creacc() { return 1; }
+bool manager::checkdata() { return 1; }
+void manager::input() {}
 void manager::fix()
 {
     print();
@@ -236,7 +236,8 @@ void manager::fix()
     int choose;
     cin >> choose;
     cin.ignore();
-    if (choose == 0) return;
+    if (choose == 0)
+        return;
 
     if (choose < 1 || choose > save.size())
     {
@@ -278,14 +279,14 @@ void manager::fix()
                     cout << "Enter the desired password: ";
                     getline(cin, tmpass);
 
-                    tmpold = save[i].getname() + "-" + save[i].getpass() + ".txt";
+                    tmpold = save[i]->getname() + "-" + save[i]->getpass() + ".txt";
                     base = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
                     oldacc = fs::path(base) / tmpold;
-                    tmpnew = save[i].getname() + "-" + save[i].getpass() + ".txt";
+                    tmpnew = tmname + "-" + tmpass + ".txt";
                     newacc = fs::path(base) / tmpnew;
 
-                    save[i].setname(tmname);
-                    save[i].setpassword(tmpass);
+                    save[i]->setname(tmname);
+                    save[i]->setpassword(tmpass);
 
                     if (fs::exists(oldacc))
                     {
@@ -313,7 +314,7 @@ void manager::fix()
                 {
                     vector<Event> events;
                     thoigian tmstt, tmet;
-                    string tpname = save[i].getname(), tppass = save[i].getpass();
+                    string tpname = save[i]->getname(), tppass = save[i]->getpass();
                     string input = tpname + "-" + tppass + ".txt";
                     string foldername = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
                     fs::path filepath = fs::path(foldername) / input;
@@ -453,8 +454,8 @@ void manager::fix()
         }
     }
 }
-void manager::writedata(){}
-void manager::countdown(){}
+void manager::writedata() {}
+void manager::countdown() {}
 
 void manager::erase()
 {
@@ -462,16 +463,16 @@ void manager::erase()
     cout << "|               USER LIST                |\n";
     cout << "==========================================\n";
     print();
-    
+
     cout << "\n==========================================\n";
     cout << "|       ENTER THE INDEX TO DELETE        |\n";
     cout << "==========================================\n";
     cout << "Enter the index of the account you want to delete (enter 0 to cancel): ";
-    
+
     int choice;
     cin >> choice;
     cin.ignore();
-    
+
     if (choice == 0)
     {
         cout << "\n==========================================\n";
@@ -487,11 +488,17 @@ void manager::erase()
         cout << "==========================================\n";
         return erase();
     }
+    cout << "Choice: " << choice << "\n";
+    cout << "Save size: " << save.size() << "\n";
+    for (int i = 0; i < save.size(); i++)
+    {
+        cout << i + 1 << ": " << save[i]->getname() << " - " << save[i]->getpass() << "\n";
+    }
 
-    string base ="C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
-    string acc = save[choice - 1].getname() + "-" + save[choice - 1].getpass() + ".txt";
+    string base = "C:\\10000hcode)))))\\OOP\\PBL2_TEST2\\DATABASE";
+    string acc = save[choice - 1]->getname() + "-" + save[choice - 1]->getpass() + ".txt";
     fs::path accpath = fs::path(base) / acc;
-    
+
     if (fs::exists(accpath))
     {
         try
@@ -500,8 +507,9 @@ void manager::erase()
             cout << "\n==========================================\n";
             cout << "|      ACCOUNT DELETED SUCCESSFULLY      |\n";
             cout << "==========================================\n";
+            save.erase(save.begin() + (choice - 1));
         }
-        catch (const std::exception &e)
+        catch (const exception &e)
         {
             cerr << "Error deleting account: " << e.what() << "\n";
         }
